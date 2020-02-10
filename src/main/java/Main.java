@@ -11,7 +11,7 @@ public class Main implements MqttCallback {
 
     private static final String SERVER_URI = "tcp://127.0.0.1";
     private static final String TOPIC_NAME = "topic";
-
+    private static ArduinoHelper arduinoHelper;
 
     public static void main(String[] args) {
         MqttClient client;
@@ -24,6 +24,8 @@ public class Main implements MqttCallback {
         } catch (MqttException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        arduinoHelper = new ArduinoHelper();
     }
 
     public void connectionLost(Throwable cause) {
@@ -37,6 +39,8 @@ public class Main implements MqttCallback {
         System.out.println("| Topic:" + topic);
         System.out.println("| Message: " + new String(message.getPayload()));
         System.out.println("-------------------------------------------------");
+
+        arduinoHelper.SendMessageToArduino(message.getPayload());
     }
 
     public void deliveryComplete(IMqttDeliveryToken imdt) {

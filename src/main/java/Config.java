@@ -1,24 +1,19 @@
-import java.util.*;
 import java.util.Properties;
 
-public class Config
-{
-    Properties configFile;
-    public Config()
-    {
+class Config {
+    private Properties configFile;
+
+    Config() {
         configFile = new java.util.Properties();
         try {
             configFile.load(this.getClass().getClassLoader().
-                    getResourceAsStream("config.cfg"));
-        }catch(Exception eta){
+                    getResourceAsStream("config.properties"));
+        } catch (Exception eta) {
             eta.printStackTrace();
         }
     }
 
-    public String getProperty(String key)
-    {
-        String value = this.configFile.getProperty(key);
-        return value;
+    String getProperty(String key) {
+        return this.configFile.getProperty(key);
     }
-
 }

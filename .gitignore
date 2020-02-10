@@ -43,4 +43,3 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 # config
-src/main/resources/config.cfg

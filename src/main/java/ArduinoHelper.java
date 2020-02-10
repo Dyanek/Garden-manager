@@ -2,7 +2,7 @@ import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.IOException;
 
-public class ArduinoHelper {
+class ArduinoHelper {
 
     private SerialPort serialPort;
 

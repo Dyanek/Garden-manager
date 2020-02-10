@@ -7,8 +7,12 @@ public class ArduinoHelper {
     private SerialPort serialPort;
 
     ArduinoHelper() {
-        serialPort = SerialPort.getCommPort("/dev/ttyACM0");
-        serialPort.setComPortParameters(9600, 8, 1, 0);
+        Config cfg = new Config();
+        final String port = cfg.getProperty("port");
+        final int baudRate = Integer.valueOf(cfg.getProperty("baudRate"));
+
+        serialPort = SerialPort.getCommPort(port);
+        serialPort.setComPortParameters(baudRate, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
 
         try {

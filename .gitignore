@@ -43,3 +43,4 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 # config
+*.properties

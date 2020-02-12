@@ -9,6 +9,7 @@ class ArduinoHelper {
     private SerialPort serialPort;
 
     int light;
+    float PH;
 
     public int getLight() {
         return light;
@@ -19,7 +20,7 @@ class ArduinoHelper {
     ArduinoHelper() {
         serialPort = SerialPort.getCommPort("/dev/cu.usbmodem14101");
         serialPort.setComPortParameters(9600, 8, 1, 0);
-        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
+        serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 3527, 3527);
 
 
         try {
@@ -67,12 +68,20 @@ class ArduinoHelper {
                 while (data.hasNext())
                 {
                     String str = data.nextLine();
-//                    System.out.println(str);
+                    System.out.println(str);
                     if(str.contains("Light"))
                     {
                         light = getValue(str);
                         jardin.uploadLuminosity(light);
-                        System.out.println("light value = " + this.light);
+//                        System.out.println("light value = " + this.light);
+                    }
+
+                    if(str.contains("PH"))
+                    {
+                        float tmp  = getValue(str);
+                        PH = tmp/100;
+                        jardin.uploadPH(PH);
+//                        System.out.println("PH value = " + this.PH);
                     }
                 }
             }

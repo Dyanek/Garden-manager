@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import static java.lang.Short.valueOf;
 
-public class ArduinoHelper {
+class ArduinoHelper {
 
 
     private SerialPort serialPort;

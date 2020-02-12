@@ -15,9 +15,6 @@ public class Jardin extends JFrame {
     private int humidity2 = 22;
     private int humidity3 = 23;
 
-
-
-
     private JFrame jFrame;
     private JPanel jPanel, panelWelcome1, panelWelcome2, panelWelcome3, panelWelcomeInfo;
     private JLabel label2, label3, labelTemperature, labelLuminosity, labelPH, labelHelp;
@@ -48,6 +45,7 @@ public class Jardin extends JFrame {
         this.panelWelcome2 = new JPanel();
         this.panelWelcome2.setBorder(new LineBorder(Color.gray));
         label2 = new JLabel("Caméra 2");
+        panelWelcome2.add(label2);
         // camera 3
         this.panelWelcome3 = new JPanel();
         this.panelWelcome3.setBorder(new LineBorder(Color.gray));
@@ -101,7 +99,6 @@ public class Jardin extends JFrame {
         jLabelHumidity1 = new JLabel("    Etage 1 : " + humidity1 + "%");
         jLabelHumidity2 = new JLabel("    Etage 2 : " + humidity2 + "%");
         jLabelHumidity3 = new JLabel("    Etage 3 : " + humidity3 + "%");
-
 
         // set window visible and center
         jFrame.setLocationRelativeTo(null);
@@ -218,9 +215,6 @@ public class Jardin extends JFrame {
 
     public void activeAcceuil(){
         this.jPanel.removeAll();
-        //this.jFrame.validate();
-        //this.jFrame.removeAll();
-        //jPanel = new JPanel();
         jPanel.add(panelWelcome1);
         jPanel.add(panelWelcome2);
         jPanel.add(panelWelcome3);

@@ -16,7 +16,7 @@ public class Jardin extends JFrame {
     private int humidity3 = 23;
 
     private JFrame jFrame;
-    private JPanel jPanel, panelWelcome1, panelWelcome2, panelWelcome3, panelWelcomeInfo, panelInfoActual;
+    private JPanel jPanel, panelWelcome1, panelWelcome2, panelWelcome3, panelWelcomeInfo;
     private JLabel label2, label3, labelTemperature, labelLuminosity, labelPH, labelHelp;
 
     private JPanel panelWater, panelHelp;
@@ -232,14 +232,6 @@ public class Jardin extends JFrame {
         jFrame.validate();
     }
 
-    public void activeActual(){
-        this.jPanel.removeAll();
-        jPanel.add(panelInfoActual);
-        jPanel.setLayout(new GridLayout(1,0));
-        jPanel.repaint();
-        jFrame.validate();
-    }
-
     // -- TEST a l'aide console --
     public void getCommande(){
         Scanner scanner = new Scanner( System.in );
@@ -282,8 +274,6 @@ public class Jardin extends JFrame {
             else if(list[1].toLowerCase().equals("3"))
                 waterThird();
         }
-        else if (list.length == 1 && list[0].toLowerCase().equals("reel"))
-            activeActual();
         else if (list.length == 1 && list[0].toLowerCase().equals("acceuil"))
             activeAcceuil();
         else

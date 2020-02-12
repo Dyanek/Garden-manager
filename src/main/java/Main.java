@@ -26,6 +26,9 @@ public class Main implements MqttCallback {
         }
 
         arduinoHelper = new ArduinoHelper();
+        arduinoHelper.GetMessageFromArduino();
+        int l = arduinoHelper.getLight();
+
     }
 
     public void connectionLost(Throwable cause) {

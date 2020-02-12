@@ -9,13 +9,18 @@ import java.util.Scanner;
 public class Jardin extends JFrame {
 
     private int temperature = 26;
+    private int luminosity = 100;
+    private float PH = 100;
     private int humidity1 = 21;
     private int humidity2 = 22;
     private int humidity3 = 23;
 
+
+
+
     private JFrame jFrame;
     private JPanel jPanel, panelWelcome1, panelWelcome2, panelWelcome3, panelWelcomeInfo;
-    private JLabel label2, label3, labelTemperature, labelHelp;
+    private JLabel label2, label3, labelTemperature, labelLuminosity, labelPH, labelHelp;
 
     private JPanel panelWater, panelHelp;
     private JLabel jLabelWaterTitle, jLabelWaterSubTitle, jLabelHumidity1, jLabelHumidity2, jLabelHumidity3, jLabelHelpTitle, jLabelHelp1, jLabelHelp2, jLabelHelp3;
@@ -43,7 +48,6 @@ public class Jardin extends JFrame {
         this.panelWelcome2 = new JPanel();
         this.panelWelcome2.setBorder(new LineBorder(Color.gray));
         label2 = new JLabel("Caméra 2");
-        panelWelcome2.add(label2);
         // camera 3
         this.panelWelcome3 = new JPanel();
         this.panelWelcome3.setBorder(new LineBorder(Color.gray));
@@ -53,11 +57,17 @@ public class Jardin extends JFrame {
         this.panelWelcomeInfo = new JPanel();
         this.panelWelcomeInfo.setBorder(new LineBorder(Color.gray));
         labelTemperature = new JLabel("Temperature : " + temperature + " °C", SwingConstants.CENTER);
+        labelLuminosity = new JLabel("Luminosité : " + luminosity, SwingConstants.CENTER);
+        labelPH = new JLabel("PH : " + PH, SwingConstants.CENTER);
+        labelTemperature.setFont(new Font( "Serif", Font.BOLD, 12));
+        labelLuminosity.setFont(new Font( "Serif", Font.BOLD, 12));
+        labelPH.setFont(new Font( "Serif", Font.BOLD, 12));
         labelHelp = new JLabel("Dites \"Aide\" pour afficher la liste des commandes disponibles", SwingConstants.CENTER);
-        labelTemperature.setFont(new Font( "Serif", Font.BOLD, 20));
         panelWelcomeInfo.add(labelTemperature);
+        panelWelcomeInfo.add(labelLuminosity);
+        panelWelcomeInfo.add(labelPH);
         panelWelcomeInfo.add(labelHelp);
-        panelWelcomeInfo.setLayout(new GridLayout(2, 0));
+        panelWelcomeInfo.setLayout(new GridLayout(5, 0));
 
         // add components
         jPanel = new JPanel();
@@ -74,7 +84,7 @@ public class Jardin extends JFrame {
         jLabelHelpTitle.setFont(new Font( "Serif", Font.BOLD, 20));
         jLabelHelp1 = new JLabel("1. temperature [chiffre]", SwingConstants.CENTER);
         jLabelHelp1.setFont(new Font( "Serif", Font.BOLD, 15));
-        jLabelHelp2 = new JLabel("2. arroser tout", SwingConstants.CENTER);
+        jLabelHelp2 = new JLabel("2. arroser tout / arroser 1/2/3 / arreter arrosage", SwingConstants.CENTER);
         jLabelHelp2.setFont(new Font( "Serif", Font.BOLD, 15));
         jLabelHelp3 = new JLabel("3. acceuil", SwingConstants.CENTER);
         jLabelHelp3.setFont(new Font( "Serif", Font.BOLD, 15));
@@ -121,6 +131,16 @@ public class Jardin extends JFrame {
         this.humidity3 = humidity3;
         jLabelHumidity3.setText("    Etage 3 : " + humidity3 + "%");
         System.out.println(">>> humidity3 uploaded : " + humidity3);
+    }
+
+    public void uploadLuminosity(int luminosity){
+        this.luminosity = luminosity;
+        labelLuminosity.setText("Luminosité : " + luminosity);
+    }
+
+    public void uploadPH(float PH){
+        this.PH = PH;
+        labelPH.setText("PH : " + PH);
     }
 
     public void waterAll(){
@@ -191,6 +211,10 @@ public class Jardin extends JFrame {
         this.jFrame.validate();
     }
 
+    public void stopWater(){
+        activeAcceuil();
+    }
+
 
     public void activeAcceuil(){
         this.jPanel.removeAll();
@@ -230,50 +254,42 @@ public class Jardin extends JFrame {
     public void traiterCommande(String c){
         String[] list = c.split(" ");
 
-        if (list[0].toLowerCase().equals("temperature"))
+        if (list.length == 2 && list[0].toLowerCase().equals("temperature"))
             uploadTemperature(Integer.valueOf(list[1]));
-        else if(list[0].toLowerCase().equals("humidity1"))
+        else if(list.length == 2 && list[0].toLowerCase().equals("humidity1"))
             uploadHumidity1(Integer.valueOf(list[1]));
-        else if(list[0].toLowerCase().equals("humidity2"))
+        else if(list.length == 2 && list[0].toLowerCase().equals("humidity2"))
             uploadHumidity2(Integer.valueOf(list[1]));
-        else if(list[0].toLowerCase().equals("humidity3"))
+        else if(list.length == 2 && list[0].toLowerCase().equals("humidity3"))
             uploadHumidity3(Integer.valueOf(list[1]));
-        else if(list[0].toLowerCase().equals("aide")){
+        else if(list.length == 2 && list[0].toLowerCase().equals("ph"))
+            uploadPH(Float.valueOf(list[1]));
+        else if(list.length == 2 && list[0].toLowerCase().equals("luminosity"))
+            uploadLuminosity(Integer.valueOf(list[1]));
+        else if(list.length == 1 && list[0].toLowerCase().equals("aide"))
             launchHelp();
-            System.out.println("Page de l'aide affiche...");
-        }
-        else if (list.length >= 2 && list[0].toLowerCase().equals("arroser")){
-            if(list[1].toLowerCase().equals("tout")){
+        else if (list.length == 2 && list[0].toLowerCase().equals("arreter") && list[1].toLowerCase().equals("arrosage"))
+            stopWater();
+        else if (list.length == 2 && list[0].toLowerCase().equals("arroser")){
+            if(list[1].toLowerCase().equals("tout"))
                 waterAll();
-                System.out.println("Arrosage tout les étages en cours...");
-            }
-            else if(list[1].toLowerCase().equals("1")){
+            else if(list[1].toLowerCase().equals("1"))
                 waterFirst();
-                System.out.println(" Arrosage de premier étage en cours...(TO DO)");
-            }
-            else if(list[1].toLowerCase().equals("2")){
+            else if(list[1].toLowerCase().equals("2"))
                 waterSecond();
-                System.out.println(" Arrosage de deuxieme étage en cours...(TO DO)");
-            }
-            else if(list[1].toLowerCase().equals("3")){
+            else if(list[1].toLowerCase().equals("3"))
                 waterThird();
-                System.out.println(" Arrosage de troisieme étage en cours...(TO DO)");
-            }
-
         }
-        else if (list[0].toLowerCase().equals("acceuil"))
+        else if (list.length == 1 && list[0].toLowerCase().equals("acceuil"))
             activeAcceuil();
-        else{
-            System.out.println(">> " + c);
-            System.out.println("C'est vraiment trop difficile à comprendre votre commande...");
-        }
+        else
+            System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
 
     }
 
     public static void main(String[] args) {
         Jardin myJardin = new Jardin();
         myJardin.laucheInterface();
-
         myJardin.getCommande();
     }
 };

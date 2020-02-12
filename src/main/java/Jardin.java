@@ -13,12 +13,12 @@ public class Jardin extends JFrame {
     private int humidity2 = 22;
     private int humidity3 = 23;
 
-    JFrame jFrame;
-    JPanel jPanel, panelWelcome1, panelWelcome2, panelWelcome3, panelWelcomeInfo;
-    JLabel label2, label3, labelTemperature, labelHelp;
+    private JFrame jFrame;
+    private JPanel jPanel, panelWelcome1, panelWelcome2, panelWelcome3, panelWelcomeInfo;
+    private JLabel label2, label3, labelTemperature, labelHelp;
 
-    JPanel panelWater, panelHelp;
-    JLabel jLabelWaterTitle, jLabelWaterSubTitle, jLabelHumidity1, jLabelHumidity2, jLabelHumidity3, jLabelHelpTitle, jLabelHelp1, jLabelHelp2, jLabelHelp3;
+    private JPanel panelWater, panelHelp;
+    private JLabel jLabelWaterTitle, jLabelWaterSubTitle, jLabelHumidity1, jLabelHumidity2, jLabelHumidity3, jLabelHelpTitle, jLabelHelp1, jLabelHelp2, jLabelHelp3;
 
     public void laucheInterface(){
 
@@ -29,8 +29,8 @@ public class Jardin extends JFrame {
         // 1.get the screen size as a java dimension
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         // 2.get 2/3 of the height, and 2/3 of the width
-        int height = screenSize.height * 4 / 5;
-        int width = screenSize.width * 4 / 5;
+        int height = screenSize.height * 2 / 5;
+        int width = screenSize.width * 2 / 5;
         // 3.set the jframe height and width
         jFrame.setSize(width, height);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,12 +61,13 @@ public class Jardin extends JFrame {
 
         // add components
         jPanel = new JPanel();
+        jFrame.add(jPanel);
 
         // loading Page d'acceuil
         activeAcceuil();
 
-        jFrame.add(jPanel);
 
+        // Panels ou Labels qui sont constants
         // Panel Help
         panelHelp = new JPanel();
         jLabelHelpTitle = new JLabel("------ Aide ------", SwingConstants.CENTER);
@@ -129,7 +130,7 @@ public class Jardin extends JFrame {
         this.jPanel.add(panelWelcome2);
         this.jPanel.add(panelWelcome3);
 
-        panelWater.removeAll();
+        panelWater = new JPanel();
         jLabelWaterTitle = new JLabel("Arrosage tout les étages en cours");
         jLabelWaterTitle.setFont(new Font( "Serif", Font.BOLD, 20));
 
@@ -140,6 +141,7 @@ public class Jardin extends JFrame {
         panelWater.add(jLabelHumidity3);
         panelWater.setLayout(new GridLayout(5,0));
         this.jPanel.add(panelWater);
+        this.jPanel.repaint();
         this.jFrame.validate();
     }
     public void waterFirst(){
@@ -155,6 +157,7 @@ public class Jardin extends JFrame {
         this.jPanel.setLayout(new GridLayout(0,2));
         this.jPanel.add(panelWelcome1);
         this.jPanel.add(panelWater);
+        this.jPanel.repaint();
         this.jFrame.validate();
     }
     public void waterSecond(){
@@ -169,6 +172,7 @@ public class Jardin extends JFrame {
         this.jPanel.setLayout(new GridLayout(0,2));
         this.jPanel.add(panelWelcome2);
         this.jPanel.add(panelWater);
+        this.jPanel.repaint();
         this.jFrame.validate();
     }
     public void waterThird(){
@@ -183,17 +187,22 @@ public class Jardin extends JFrame {
         this.jPanel.setLayout(new GridLayout(0,2));
         this.jPanel.add(panelWelcome3);
         this.jPanel.add(panelWater);
+        this.jPanel.repaint();
         this.jFrame.validate();
     }
 
 
     public void activeAcceuil(){
         this.jPanel.removeAll();
+        //this.jFrame.validate();
+        //this.jFrame.removeAll();
+        //jPanel = new JPanel();
         jPanel.add(panelWelcome1);
         jPanel.add(panelWelcome2);
         jPanel.add(panelWelcome3);
         jPanel.add(panelWelcomeInfo);
         jPanel.setLayout(new GridLayout(2,2));
+        jPanel.repaint();
         this.jFrame.validate();
     }
 
@@ -201,6 +210,7 @@ public class Jardin extends JFrame {
         this.jPanel.removeAll();
         jPanel.add(panelHelp);
         jPanel.setLayout(new GridLayout(1,0));
+        jPanel.repaint();
         jFrame.validate();
     }
 

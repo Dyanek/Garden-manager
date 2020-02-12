@@ -48,6 +48,7 @@ public class Jardin extends JFrame {
         this.panelWelcome2 = new JPanel();
         this.panelWelcome2.setBorder(new LineBorder(Color.gray));
         label2 = new JLabel("Caméra 2");
+        panelWelcome2.add(label2);
         // camera 3
         this.panelWelcome3 = new JPanel();
         this.panelWelcome3.setBorder(new LineBorder(Color.gray));
@@ -218,9 +219,6 @@ public class Jardin extends JFrame {
 
     public void activeAcceuil(){
         this.jPanel.removeAll();
-        //this.jFrame.validate();
-        //this.jFrame.removeAll();
-        //jPanel = new JPanel();
         jPanel.add(panelWelcome1);
         jPanel.add(panelWelcome2);
         jPanel.add(panelWelcome3);

@@ -50,7 +50,7 @@ class ArduinoHelper {
         return valueOf(res);
     }
 
-    void GetMessageFromArduino()
+    void GetMessageFromArduino(Jardin jardin)
     {
         try
         {
@@ -67,10 +67,11 @@ class ArduinoHelper {
                 while (data.hasNext())
                 {
                     String str = data.nextLine();
-                    System.out.println(str);
+//                    System.out.println(str);
                     if(str.contains("Light"))
                     {
                         light = getValue(str);
+                        jardin.uploadLuminosity(light);
                         System.out.println("light value = " + this.light);
                     }
                 }

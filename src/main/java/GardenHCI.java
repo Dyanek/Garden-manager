@@ -6,7 +6,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.Scanner;
 
-public class Jardin extends JFrame {
+public class GardenHCI extends JFrame {
 
     private int temperature = 26;
     private int luminosity = 100;
@@ -24,7 +24,7 @@ public class Jardin extends JFrame {
 
     public void laucheInterface(){
 
-        this.jFrame = new JFrame("Jardin Vertical");
+        this.jFrame = new JFrame("GardenHCI Vertical");
 
         // -- Setting the width and height of frame --
         // Setting the width and height of frame
@@ -282,9 +282,9 @@ public class Jardin extends JFrame {
     }
 
     public static void main(String[] args) {
-        Jardin myJardin = new Jardin();
-        myJardin.laucheInterface();
-        myJardin.getCommande();
+        GardenHCI myGardenHCI = new GardenHCI();
+        myGardenHCI.laucheInterface();
+        myGardenHCI.getCommande();
     }
 };
 

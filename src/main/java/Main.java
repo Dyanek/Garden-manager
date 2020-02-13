@@ -25,11 +25,11 @@ public class Main implements MqttCallback {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Jardin myJardin = new Jardin();
-        myJardin.laucheInterface();
+        GardenHCI myGradinHCI = new GardenHCI();
+        myGradinHCI.launchHCI();
 
         arduinoHelper = new ArduinoHelper();
-        arduinoHelper.GetMessageFromArduino(myJardin);
+        arduinoHelper.GetMessageFromArduino(myGradinHCI);
 //        System.out.println(arduinoHelper.getLight());
 //        System.out.println("oooooooooooo");
 //

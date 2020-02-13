@@ -51,7 +51,7 @@ class ArduinoHelper {
         return valueOf(res);
     }
 
-    void GetMessageFromArduino(Jardin jardin)
+    void GetMessageFromArduino(GardenHCI gradinHCI)
     {
         try
         {
@@ -72,7 +72,7 @@ class ArduinoHelper {
                     if(str.contains("Light"))
                     {
                         light = getValue(str);
-                        jardin.uploadLuminosity(light);
+                        gradinHCI.uploadLuminosity(light);
 //                        System.out.println("light value = " + this.light);
                     }
 
@@ -80,7 +80,7 @@ class ArduinoHelper {
                     {
                         float tmp  = getValue(str);
                         PH = tmp/100;
-                        jardin.uploadPH(PH);
+                        gradinHCI.uploadPH(PH);
 //                        System.out.println("PH value = " + this.PH);
                     }
                 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class GardenHCI extends JFrame {
 
+    // TODO: init avec les vrais valeurs
     private float temperature = 100;
     private float luminosity = 100;
     private float ph = 100;
@@ -79,16 +80,22 @@ public class GardenHCI extends JFrame {
         panelHelp = new JPanel();
         JLabel jLabelHelpTitle = new JLabel("------ Aide ------", SwingConstants.CENTER);
         jLabelHelpTitle.setFont(new Font( "Serif", Font.BOLD, 20));
-        JLabel jLabelHelp1 = new JLabel("1. temperature [chiffre]", SwingConstants.CENTER);
+        JLabel jLabelHelp1 = new JLabel("<html><body>1. \"accueil\"<br/>Pour retourner au page d'accueil.</body></html>");
         jLabelHelp1.setFont(new Font( "Serif", Font.BOLD, 15));
-        JLabel jLabelHelp2 = new JLabel("2. arroser tout / arroser 1/2/3 / arreter arrosage", SwingConstants.CENTER);
+        JLabel jLabelHelp2 = new JLabel("<html><body>2. \"arroser\" [tout/1/2/3]<br/>Pour arroser tous les étages ou tel étage.</body></html>");
         jLabelHelp2.setFont(new Font( "Serif", Font.BOLD, 15));
-        JLabel jLabelHelp3 = new JLabel("3. acceuil", SwingConstants.CENTER);
+        JLabel jLabelHelp3 = new JLabel("<html><body>3. \"arreter arrosage\"<br/>Pour arreter arrosage.</body></html>");
         jLabelHelp3.setFont(new Font( "Serif", Font.BOLD, 15));
+        JLabel jLabelHelp4 = new JLabel("<html><body>4. \"temperature/watersensorvaluefloor1(2/3)/ph/luminosite\" [chiffre]<br/>Pour mis a jour la valeur correspondante(pour developper).</body></html>");//TODO: (pour developper), a supprimer
+        jLabelHelp4.setFont(new Font( "Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
+        JLabel jLabelHelp5 = new JLabel("<html><body>5. \"exit\" [chiffre]<br/>Pour quitter.</body></html>");//TODO: (pour developper), a supprimer
+        jLabelHelp5.setFont(new Font( "Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
         panelHelp.add(jLabelHelpTitle);
         panelHelp.add(jLabelHelp1);
         panelHelp.add(jLabelHelp2);
         panelHelp.add(jLabelHelp3);
+        panelHelp.add(jLabelHelp4); //TODO: (pour developper), a supprimer
+        panelHelp.add(jLabelHelp5); //TODO: (pour developper), a supprimer
         panelHelp.setLayout(new GridLayout(5, 0));
     }
 
@@ -249,7 +256,7 @@ public class GardenHCI extends JFrame {
                 case "ph":
                     uploadPH(Float.valueOf(list[1]));
                     break;
-                case "luminosity":
+                case "luminosite":
                     uploadLuminosity(Float.valueOf(list[1]));
                     break;
                 case "arroser":

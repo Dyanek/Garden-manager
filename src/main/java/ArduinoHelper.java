@@ -7,23 +7,12 @@ import static java.lang.Short.valueOf;
 
 class ArduinoHelper {
 
-
     private SerialPort serialPort;
-
-    int light;
-    float PH;
-
-    public int getLight() {
-        return light;
-    }
-
-
 
     ArduinoHelper() {
         serialPort = SerialPort.getCommPort("/dev/cu.usbmodem14101");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 3527, 3527);
-
 
         try {
             serialPort.openPort();
@@ -44,55 +33,43 @@ class ArduinoHelper {
     }
 
     public static int getValue(String str) {
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (int j = 0; j < str.length(); j++) {
             if (str.charAt(j) >= 48 && str.charAt(j) <= 57) {
-                res += str.charAt(j);
+                res.append(str.charAt(j));
             }
         }
-        return valueOf(res);
+        return valueOf(res.toString());
     }
 
-    void GetMessageFromArduino(GardenHCI gardenHCI)
-    {
-        try
-        {
-            while (true)
-            {
-                while (serialPort.bytesAvailable() == 0)
-                {
+    void GetMessageFromArduino(Garden garden) {
+        try {
+            while (true) {
+                while (serialPort.bytesAvailable() == 0) {
                     Thread.sleep(1000);
                 }
 
                 Scanner data = new Scanner(serialPort.getInputStream());
 
                 int i = 0;
-                while (data.hasNext())
-                {
+                while (data.hasNext()) {
                     String str = data.nextLine();
                     System.out.println(str);
-                    if(str.contains("Light"))
-                    {
-                        light = getValue(str);
-                      
-                        gardenHCI.uploadLuminosity(light);
 
-//                        System.out.println("light value = " + this.light);
+                    if (str.contains("Light")) {
+                        int light = getValue(str);
+
+                        garden.getFloor(1).getBrightnessSensor().addValue((float) light);
                     }
 
-                    if(str.contains("PH"))
-                    {
-                        float tmp  = getValue(str);
-                        PH = tmp/100;r
-                        gardenHCI.uploadPH(PH);
-                      
-//                        System.out.println("PH value = " + this.PH);
+                    if (str.contains("PH")) {
+                        float tmp = getValue(str);
+                        float ph = tmp / 100;
+                        garden.getFloor(2).getAciditySensor().addValue(ph);
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

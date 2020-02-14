@@ -8,97 +8,36 @@ import java.util.Scanner;
 
 public class GardenHCI extends JFrame {
 
-    private int temperature = 26;
-    private int luminosity = 100;
-    private float PH = 100;
-    private int humidity1 = 21;
-    private int humidity2 = 22;
-    private int humidity3 = 23;
+    // TODO: init avec les vrais valeurs
+    private float temperature = 100;
+    private float luminosity = 100;
+    private float ph = 100;
+    private int waterSensorValueFloor1 = 101;
+    private int waterSensorValueFloor2 = 102;
+    private int waterSensorValueFloor3 = 103;
 
     private JFrame jFrame;
-    private JPanel jPanel, panelWelcome1, panelWelcome2, panelWelcome3, panelWelcomeInfo;
-    private JLabel label2, label3, labelTemperature, labelLuminosity, labelPH, labelHelp;
+    private JPanel jPanel, panelCamera1, panelCamera2, panelCamera3, panelWelcomeInfo;
+    private JLabel labelTemperature;
+    private JLabel labelLuminosity;
+    private JLabel labelPH;
 
     private JPanel panelWater, panelHelp;
-    private JLabel jLabelWaterTitle, jLabelWaterSubTitle, jLabelHumidity1, jLabelHumidity2, jLabelHumidity3, jLabelHelpTitle, jLabelHelp1, jLabelHelp2, jLabelHelp3;
+    private JLabel jLabelWaterTitle;
+    private JLabel jLabelWaterSubTitle;
+    private JLabel jLabelWaterSensor1;
+    private JLabel jLabelWaterSensor2;
+    private JLabel jLabelWaterSensor3;
 
-    public void laucheInterface(){
-
-        this.jFrame = new JFrame("GardenHCI Vertical");
-
+    private void initHCI(){
+        final String HCITitle = "Jardin Vertical";
+        this.jFrame = new JFrame(HCITitle);
         // -- Setting the width and height of frame --
-        // Setting the width and height of frame
-        // 1.get the screen size as a java dimension
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        // 2.get 2/3 of the height, and 2/3 of the width
-        int height = screenSize.height * 2 / 5;
-        int width = screenSize.width * 2 / 5;
-        // 3.set the jframe height and width
-        jFrame.setSize(width, height);
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setSize(screenSize.width * 2 / 5, screenSize.height * 2 / 5); // TO DO
 
-        // -- panelWelcome1 : 4 Components --
-        // camera 1
-        this.panelWelcome1 = new WebcamPanel(Webcam.getDefault());
-        this.panelWelcome1.setBorder(new LineBorder(Color.gray));
-        // camera 2
-        this.panelWelcome2 = new JPanel();
-        this.panelWelcome2.setBorder(new LineBorder(Color.gray));
-        label2 = new JLabel("Caméra 2");
-        panelWelcome2.add(label2);
-        // camera 3
-        this.panelWelcome3 = new JPanel();
-        this.panelWelcome3.setBorder(new LineBorder(Color.gray));
-        label3 = new JLabel("Caméra 3");
-        panelWelcome3.add(label3);
-        // panelWelcomeInfo
-        this.panelWelcomeInfo = new JPanel();
-        this.panelWelcomeInfo.setBorder(new LineBorder(Color.gray));
-        labelTemperature = new JLabel("Temperature : " + temperature + " °C", SwingConstants.CENTER);
-        labelLuminosity = new JLabel("Luminosité : " + luminosity, SwingConstants.CENTER);
-        labelPH = new JLabel("PH : " + PH, SwingConstants.CENTER);
-        labelTemperature.setFont(new Font( "Serif", Font.BOLD, 12));
-        labelLuminosity.setFont(new Font( "Serif", Font.BOLD, 12));
-        labelPH.setFont(new Font( "Serif", Font.BOLD, 12));
-        labelHelp = new JLabel("Dites \"Aide\" pour afficher la liste des commandes disponibles", SwingConstants.CENTER);
-        panelWelcomeInfo.add(labelTemperature);
-        panelWelcomeInfo.add(labelLuminosity);
-        panelWelcomeInfo.add(labelPH);
-        panelWelcomeInfo.add(labelHelp);
-        panelWelcomeInfo.setLayout(new GridLayout(5, 0));
-
-        // add components
         jPanel = new JPanel();
         jFrame.add(jPanel);
-
-        // loading Page d'acceuil
-        activeAcceuil();
-
-
-        // Panels ou Labels qui sont constants
-        // Panel Help
-        panelHelp = new JPanel();
-        jLabelHelpTitle = new JLabel("------ Aide ------", SwingConstants.CENTER);
-        jLabelHelpTitle.setFont(new Font( "Serif", Font.BOLD, 20));
-        jLabelHelp1 = new JLabel("1. temperature [chiffre]", SwingConstants.CENTER);
-        jLabelHelp1.setFont(new Font( "Serif", Font.BOLD, 15));
-        jLabelHelp2 = new JLabel("2. arroser tout / arroser 1/2/3 / arreter arrosage", SwingConstants.CENTER);
-        jLabelHelp2.setFont(new Font( "Serif", Font.BOLD, 15));
-        jLabelHelp3 = new JLabel("3. acceuil", SwingConstants.CENTER);
-        jLabelHelp3.setFont(new Font( "Serif", Font.BOLD, 15));
-        panelHelp.add(jLabelHelpTitle);
-        panelHelp.add(jLabelHelp1);
-        panelHelp.add(jLabelHelp2);
-        panelHelp.add(jLabelHelp3);
-        panelHelp.setLayout(new GridLayout(5, 0));
-
-        // Panel Water
-        panelWater = new JPanel();
-        panelWater.setLayout(new GridLayout(5,0));
-        jLabelWaterSubTitle = new JLabel("Taux de humidite : \n");
-        jLabelHumidity1 = new JLabel("    Etage 1 : " + humidity1 + "%");
-        jLabelHumidity2 = new JLabel("    Etage 2 : " + humidity2 + "%");
-        jLabelHumidity3 = new JLabel("    Etage 3 : " + humidity3 + "%");
 
         // set window visible and center
         jFrame.setLocationRelativeTo(null);
@@ -106,125 +45,193 @@ public class GardenHCI extends JFrame {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void uploadTemperature(int temperature){
+    private void initWelcome(float temperature, float luminosity, float ph) {// TODO: Init with real value(temperapure, humidité, etc...)
+        this.temperature = temperature;
+        this.luminosity = luminosity;
+        this.ph = ph;
+
+        // camera 1
+        this.panelCamera1 = new WebcamPanel(Webcam.getDefault());// TODO: to change with the real camera
+        this.panelCamera1.setBorder(new LineBorder(Color.gray));
+        // camera 2
+        this.panelCamera2 = new JPanel();
+        this.panelCamera2.setBorder(new LineBorder(Color.gray));
+        JLabel labelCamera2 = new JLabel("Caméra 2");
+        panelCamera2.add(labelCamera2);
+        // camera 3
+        this.panelCamera3 = new JPanel();
+        this.panelCamera3.setBorder(new LineBorder(Color.gray));
+        JLabel labelCamera3 = new JLabel("Caméra 3");
+        panelCamera3.add(labelCamera3);
+
+        // panelWelcomeInfo
+        this.panelWelcomeInfo = new JPanel();
+        this.panelWelcomeInfo.setBorder(new LineBorder(Color.gray));
+        labelTemperature = new JLabel("Temperature : " + temperature + " °C", SwingConstants.CENTER);
+        labelLuminosity = new JLabel("Luminosité : " + luminosity, SwingConstants.CENTER);
+
+        labelPH = new JLabel("PH : " + ph, SwingConstants.CENTER);
+        labelTemperature.setFont(new Font( "Serif", Font.BOLD, 12));
+        labelLuminosity.setFont(new Font( "Serif", Font.BOLD, 12));
+        labelPH.setFont(new Font( "Serif", Font.BOLD, 12));
+        JLabel labelHelp = new JLabel("Dites \"Aide\" pour afficher la liste des commandes disponibles", SwingConstants.CENTER);
+
+        panelWelcomeInfo.add(labelTemperature);
+        panelWelcomeInfo.add(labelLuminosity);
+        panelWelcomeInfo.add(labelPH);
+        panelWelcomeInfo.add(labelHelp);
+        panelWelcomeInfo.setLayout(new GridLayout(5, 0));
+
+    }
+
+    private void initHelp(){ // TODO: mis à jour avec les informations correspondants
+        panelHelp = new JPanel();
+        JLabel jLabelHelpTitle = new JLabel("------ Aide ------", SwingConstants.CENTER);
+        jLabelHelpTitle.setFont(new Font( "Serif", Font.BOLD, 20));
+        JLabel jLabelHelp1 = new JLabel("<html><body>1. \"accueil\"<br/>Pour retourner au page d'accueil.</body></html>");
+        jLabelHelp1.setFont(new Font( "Serif", Font.BOLD, 15));
+        JLabel jLabelHelp2 = new JLabel("<html><body>2. \"arroser\" [tout/1/2/3]<br/>Pour arroser tous les étages ou tel étage.</body></html>");
+        jLabelHelp2.setFont(new Font( "Serif", Font.BOLD, 15));
+        JLabel jLabelHelp3 = new JLabel("<html><body>3. \"arreter arrosage\"<br/>Pour arreter arrosage.</body></html>");
+        jLabelHelp3.setFont(new Font( "Serif", Font.BOLD, 15));
+        JLabel jLabelHelp4 = new JLabel("<html><body>4. \"temperature/watersensorvaluefloor1(2/3)/ph/luminosite\" [chiffre]<br/>Pour mis a jour la valeur correspondante(pour developper).</body></html>");//TODO: (pour developper), a supprimer
+        jLabelHelp4.setFont(new Font( "Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
+        JLabel jLabelHelp5 = new JLabel("<html><body>5. \"exit\" [chiffre]<br/>Pour quitter.</body></html>");//TODO: (pour developper), a supprimer
+        jLabelHelp5.setFont(new Font( "Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
+
+        panelHelp.add(jLabelHelpTitle);
+        panelHelp.add(jLabelHelp1);
+        panelHelp.add(jLabelHelp2);
+        panelHelp.add(jLabelHelp3);
+
+        panelHelp.add(jLabelHelp4); //TODO: (pour developper), a supprimer
+        panelHelp.add(jLabelHelp5); //TODO: (pour developper), a supprimer
+        panelHelp.setLayout(new GridLayout(5, 0));
+    }
+
+    public void initWater(int waterSensorValueFloor1, int waterSensorValueFloor2, int waterSensorValueFloor3) {
+        this.waterSensorValueFloor1 = waterSensorValueFloor1;
+        this.waterSensorValueFloor2 = waterSensorValueFloor2;
+        this.waterSensorValueFloor3 = waterSensorValueFloor3;
+
+        panelWater = new JPanel();
+        panelWater.setLayout(new GridLayout(5,0));
+        jLabelWaterSubTitle = new JLabel("Taux de humidite : \n");
+        jLabelWaterSensor1 = new JLabel("    Etage 1 : " + waterSensorValueFloor1 + "%");
+        jLabelWaterSensor2 = new JLabel("    Etage 2 : " + waterSensorValueFloor2 + "%");
+        jLabelWaterSensor3 = new JLabel("    Etage 3 : " + waterSensorValueFloor3 + "%");
+    }
+
+    public void launchHCI(float temperature, float luminosity, float ph, int waterSensorValueFloor1, int waterSensorValueFloor2, int waterSensorValueFloor3) {
+        initHCI();
+        initWelcome(temperature, luminosity, ph);
+        initHelp();
+        initWater(waterSensorValueFloor1, waterSensorValueFloor2, waterSensorValueFloor3);
+        displayWelcome();
+    }
+
+    public void uploadTemperature(float temperature){
+
         this.temperature = temperature;
         labelTemperature.setText("Temperature : " + temperature + " °C");
         System.out.println(">>> temperature uploaded : " + temperature);
     }
 
-    public void uploadHumidity1(int humidity1){
-        this.humidity1 = humidity1;
-        jLabelHumidity1.setText("    Etage 1 : " + humidity1 + "%");
-        System.out.println(">>> humidity1 uploaded : " + humidity1);
+    void uploadWaterSensorValueFloor1(int waterSensorValueFloor1){
+        this.waterSensorValueFloor1 = waterSensorValueFloor1;
+        jLabelWaterSensor1.setText("    Etage 1 : " + waterSensorValueFloor1 + "%");
+        System.out.println(">>> waterSensorValueFloor1 uploaded : " + waterSensorValueFloor1);
     }
 
-    public void uploadHumidity2(int humidity2){
-        this.humidity2 = humidity2;
-        jLabelHumidity2.setText("    Etage 2 : " + humidity2 + "%");
-        System.out.println(">>> humidity2 uploaded : " + humidity2);
+    void uploadWaterSensorValueFloor2(int waterSensorValueFloor2){
+        this.waterSensorValueFloor2 = waterSensorValueFloor2;
+        jLabelWaterSensor2.setText("    Etage 2 : " + waterSensorValueFloor2 + "%");
+        System.out.println(">>> waterSensorValueFloor2 uploaded : " + waterSensorValueFloor2);
     }
 
-    public void uploadHumidity3(int humidity3){
-        this.humidity3 = humidity3;
-        jLabelHumidity3.setText("    Etage 3 : " + humidity3 + "%");
-        System.out.println(">>> humidity3 uploaded : " + humidity3);
+    void uploadWaterSensorValueFloor3(int waterSensorValueFloor3){
+        this.waterSensorValueFloor3 = waterSensorValueFloor3;
+        jLabelWaterSensor3.setText("    Etage 3 : " + waterSensorValueFloor3 + "%");
+        System.out.println(">>> waterSensorValueFloor3 uploaded : " + waterSensorValueFloor3);
     }
 
-    public void uploadLuminosity(int luminosity){
+    void uploadLuminosity(float luminosity){
+
         this.luminosity = luminosity;
         labelLuminosity.setText("Luminosité : " + luminosity);
     }
 
-    public void uploadPH(float PH){
-        this.PH = PH;
-        labelPH.setText("PH : " + PH);
+    public void uploadPH(float ph){
+        this.ph = ph;
+        labelPH.setText("ph : " + ph);
     }
 
-    public void waterAll(){
-        this.jPanel.removeAll();
-        this.jPanel.setLayout(new GridLayout(2,2));
-        this.jPanel.add(panelWelcome1);
-        this.jPanel.add(panelWelcome2);
-        this.jPanel.add(panelWelcome3);
-
-        panelWater = new JPanel();
-        jLabelWaterTitle = new JLabel("Arrosage tout les étages en cours");
+    private void loadWaterPanel(String waterTitle, JLabel jLabelWaterSensor, JPanel panelCamera){
+        jLabelWaterTitle = new JLabel(waterTitle);
         jLabelWaterTitle.setFont(new Font( "Serif", Font.BOLD, 20));
 
         panelWater.add(jLabelWaterTitle);
         panelWater.add(jLabelWaterSubTitle);
-        panelWater.add(jLabelHumidity1);
-        panelWater.add(jLabelHumidity2);
-        panelWater.add(jLabelHumidity3);
-        panelWater.setLayout(new GridLayout(5,0));
-        this.jPanel.add(panelWater);
-        this.jPanel.repaint();
-        this.jFrame.validate();
-    }
-    public void waterFirst(){
+        panelWater.add(jLabelWaterSensor);
 
+        jPanel.setLayout(new GridLayout(0, 2));
+        jPanel.add(panelCamera);
+        jPanel.add(panelWater);
+    }
+
+    public void waterFloor(String numberFloor){
         panelWater.removeAll();
-        jLabelWaterTitle = new JLabel(" Arrosage de premier étage en cours");
-        jLabelWaterTitle.setFont(new Font( "Serif", Font.BOLD, 20));
-        panelWater.add(jLabelWaterTitle);
-        panelWater.add(jLabelWaterSubTitle);
-        panelWater.add(jLabelHumidity1);
+        jPanel.removeAll();
+        switch (numberFloor){
+            case "tout":
+                jLabelWaterTitle = new JLabel("Arrosage tout les étages en cours");
+                jLabelWaterTitle.setFont(new Font( "Serif", Font.BOLD, 20));
+                panelWater.add(jLabelWaterTitle);
+                panelWater.add(jLabelWaterSubTitle);
+                panelWater.add(jLabelWaterSensor1);
+                panelWater.add(jLabelWaterSensor2);
+                panelWater.add(jLabelWaterSensor3);
+                panelWater.setLayout(new GridLayout(5,0));
+                this.jPanel.setLayout(new GridLayout(2,2));
+                this.jPanel.add(panelCamera1);
+                this.jPanel.add(panelCamera2);
+                this.jPanel.add(panelCamera3);
+                this.jPanel.add(panelWater);
+                break;
+            case "1":
+                loadWaterPanel(" Arrosage de premier étage en cours", jLabelWaterSensor1, panelCamera1);
+                break;
+            case "2":
+                loadWaterPanel(" Arrosage de deuxieme étage en cours", jLabelWaterSensor2, panelCamera2);
+                break;
+            case "3":
+                loadWaterPanel(" Arrosage de troisieme étage en cours", jLabelWaterSensor3, panelCamera3);
+                break;
+            default:
+                System.out.println("Ops, Erreur de Arrosage");
+        }
 
-        this.jPanel.removeAll();
-        this.jPanel.setLayout(new GridLayout(0,2));
-        this.jPanel.add(panelWelcome1);
-        this.jPanel.add(panelWater);
-        this.jPanel.repaint();
-        this.jFrame.validate();
-    }
-    public void waterSecond(){
-        panelWater.removeAll();
-        jLabelWaterTitle = new JLabel(" Arrosage de deuxieme étage en cours");
-        jLabelWaterTitle.setFont(new Font( "Serif", Font.BOLD, 20));
-        panelWater.add(jLabelWaterTitle);
-        panelWater.add(jLabelWaterSubTitle);
-        panelWater.add(jLabelHumidity2);
-
-        this.jPanel.removeAll();
-        this.jPanel.setLayout(new GridLayout(0,2));
-        this.jPanel.add(panelWelcome2);
-        this.jPanel.add(panelWater);
-        this.jPanel.repaint();
-        this.jFrame.validate();
-    }
-    public void waterThird(){
-        panelWater.removeAll();
-        jLabelWaterTitle = new JLabel(" Arrosage de troisieme étage en cours");
-        jLabelWaterTitle.setFont(new Font( "Serif", Font.BOLD, 20));
-        panelWater.add(jLabelWaterTitle);
-        panelWater.add(jLabelWaterSubTitle);
-        panelWater.add(jLabelHumidity3);
-
-        this.jPanel.removeAll();
-        this.jPanel.setLayout(new GridLayout(0,2));
-        this.jPanel.add(panelWelcome3);
-        this.jPanel.add(panelWater);
         this.jPanel.repaint();
         this.jFrame.validate();
     }
 
-    public void stopWater(){
-        activeAcceuil();
+    public void stopWater(){// TODO: stopWater -> arreter quel étage ...
+        displayWelcome();
     }
 
 
-    public void activeAcceuil(){
+    public void displayWelcome(){
         this.jPanel.removeAll();
-        jPanel.add(panelWelcome1);
-        jPanel.add(panelWelcome2);
-        jPanel.add(panelWelcome3);
+        jPanel.add(panelCamera1);
+        jPanel.add(panelCamera2);
+        jPanel.add(panelCamera3);
         jPanel.add(panelWelcomeInfo);
         jPanel.setLayout(new GridLayout(2,2));
         jPanel.repaint();
         this.jFrame.validate();
     }
 
-    public void launchHelp(){
+    public void displayHelp(){
         this.jPanel.removeAll();
         jPanel.add(panelHelp);
         jPanel.setLayout(new GridLayout(1,0));
@@ -248,43 +255,59 @@ public class GardenHCI extends JFrame {
     public void traiterCommande(String c){
         String[] list = c.split(" ");
 
-        if (list.length == 2 && list[0].toLowerCase().equals("temperature"))
-            uploadTemperature(Integer.valueOf(list[1]));
-        else if(list.length == 2 && list[0].toLowerCase().equals("humidity1"))
-            uploadHumidity1(Integer.valueOf(list[1]));
-        else if(list.length == 2 && list[0].toLowerCase().equals("humidity2"))
-            uploadHumidity2(Integer.valueOf(list[1]));
-        else if(list.length == 2 && list[0].toLowerCase().equals("humidity3"))
-            uploadHumidity3(Integer.valueOf(list[1]));
-        else if(list.length == 2 && list[0].toLowerCase().equals("ph"))
-            uploadPH(Float.valueOf(list[1]));
-        else if(list.length == 2 && list[0].toLowerCase().equals("luminosity"))
-            uploadLuminosity(Integer.valueOf(list[1]));
-        else if(list.length == 1 && list[0].toLowerCase().equals("aide"))
-            launchHelp();
-        else if (list.length == 2 && list[0].toLowerCase().equals("arreter") && list[1].toLowerCase().equals("arrosage"))
-            stopWater();
-        else if (list.length == 2 && list[0].toLowerCase().equals("arroser")){
-            if(list[1].toLowerCase().equals("tout"))
-                waterAll();
-            else if(list[1].toLowerCase().equals("1"))
-                waterFirst();
-            else if(list[1].toLowerCase().equals("2"))
-                waterSecond();
-            else if(list[1].toLowerCase().equals("3"))
-                waterThird();
+        if(list.length == 2){
+            String firstWord = list[0].toLowerCase();
+            switch(firstWord){
+                case "temperature":
+                    uploadTemperature(Float.valueOf(list[1]));
+                    break;
+                case "watersensorvaluefloor1":
+                    uploadWaterSensorValueFloor1(Integer.valueOf(list[1]));
+                    break;
+                case "watersensorvaluefloor2":
+                    uploadWaterSensorValueFloor2(Integer.valueOf(list[1]));
+                    break;
+                case "watersensorvaluefloor3":
+                    uploadWaterSensorValueFloor3(Integer.valueOf(list[1]));
+                case "ph":
+                    uploadPH(Float.valueOf(list[1]));
+                    break;
+                case "luminosite":
+                    uploadLuminosity(Float.valueOf(list[1]));
+                    break;
+                case "arroser":
+                    waterFloor(list[1].toLowerCase());
+                    break;
+                case "arreter":
+                    if(list[1].toLowerCase().equals("arrosage")) // TO DO : arroser quel étage ...
+                        stopWater();
+                    break;
+                default:
+                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
+                    break;
+            }
+        }else if(list.length == 1){
+            switch(list[0].toLowerCase()){
+                case "aide":
+                    displayHelp();
+                    break;
+                case "accueil":
+                    displayWelcome();
+                    break;
+                default:
+                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
+                    break;
+            }
         }
-        else if (list.length == 1 && list[0].toLowerCase().equals("acceuil"))
-            activeAcceuil();
         else
             System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
 
     }
 
     public static void main(String[] args) {
-        GardenHCI myGardenHCI = new GardenHCI();
-        myGardenHCI.laucheInterface();
-        myGardenHCI.getCommande();
+        GardenHCI myGradinHCI = new GardenHCI();
+        myGradinHCI.launchHCI(1, 2, 3, 4, 5, 6);
+        myGradinHCI.getCommande();
     }
 };
 

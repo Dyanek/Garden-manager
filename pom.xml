@@ -19,6 +19,11 @@
             </plugin>
         </plugins>
     </build>
+  
+    <properties>
+        <maven.compiler.target>1.11</maven.compiler.target>
+        <maven.compiler.source>1.11</maven.compiler.source>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -39,9 +44,6 @@
             <artifactId>webcam-capture</artifactId>
             <version>0.3.12</version>
         </dependency>
-
-
-
     </dependencies>
 
 </project>

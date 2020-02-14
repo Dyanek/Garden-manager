@@ -74,15 +74,18 @@ class ArduinoHelper {
                     if(str.contains("Light"))
                     {
                         light = getValue(str);
+                      
                         gardenHCI.uploadLuminosity(light);
+
 //                        System.out.println("light value = " + this.light);
                     }
 
                     if(str.contains("PH"))
                     {
                         float tmp  = getValue(str);
-                        PH = tmp/100;
+                        PH = tmp/100;r
                         gardenHCI.uploadPH(PH);
+                      
 //                        System.out.println("PH value = " + this.PH);
                     }
                 }

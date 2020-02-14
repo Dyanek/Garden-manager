@@ -1,11 +1,10 @@
+import org.eclipse.paho.client.mqttv3.*;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class Main implements MqttCallback {
 
@@ -25,19 +24,18 @@ public class Main implements MqttCallback {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        GardenHCI myGradinHCI = new GardenHCI();
-        myGradinHCI.launchHCI();
+        Set<Floor> allFloors = new HashSet<>(Arrays.asList(
+                new Floor(1, ""),
+                new Floor(2, ""),
+                new Floor(3, "")));
+
+        Garden garden = new Garden(allFloors);
+
+        GardenHCI myGardenHCI = new GardenHCI();
+        myGardenHCI.laucheInterface();
 
         arduinoHelper = new ArduinoHelper();
-        arduinoHelper.GetMessageFromArduino(myGradinHCI);
-//        System.out.println(arduinoHelper.getLight());
-//        System.out.println("oooooooooooo");
-//
-//        while(true){
-//            System.out.println(arduinoHelper.getLight() + "----------------");
-//        }
-
-
+        arduinoHelper.GetMessageFromArduino(myGardenHCI);
     }
 
     public void connectionLost(Throwable cause) {

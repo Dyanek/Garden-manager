@@ -63,21 +63,25 @@ public class GardenHCI extends JFrame {
         this.panelCamera3.setBorder(new LineBorder(Color.gray));
         JLabel labelCamera3 = new JLabel("Caméra 3");
         panelCamera3.add(labelCamera3);
+
         // panelWelcomeInfo
         this.panelWelcomeInfo = new JPanel();
         this.panelWelcomeInfo.setBorder(new LineBorder(Color.gray));
         labelTemperature = new JLabel("Temperature : " + temperature + " °C", SwingConstants.CENTER);
         labelLuminosity = new JLabel("Luminosité : " + luminosity, SwingConstants.CENTER);
+
         labelPH = new JLabel("PH : " + ph, SwingConstants.CENTER);
         labelTemperature.setFont(new Font( "Serif", Font.BOLD, 12));
         labelLuminosity.setFont(new Font( "Serif", Font.BOLD, 12));
         labelPH.setFont(new Font( "Serif", Font.BOLD, 12));
         JLabel labelHelp = new JLabel("Dites \"Aide\" pour afficher la liste des commandes disponibles", SwingConstants.CENTER);
+
         panelWelcomeInfo.add(labelTemperature);
         panelWelcomeInfo.add(labelLuminosity);
         panelWelcomeInfo.add(labelPH);
         panelWelcomeInfo.add(labelHelp);
         panelWelcomeInfo.setLayout(new GridLayout(5, 0));
+
     }
 
     private void initHelp(){ // TODO: mis à jour avec les informations correspondants
@@ -94,10 +98,12 @@ public class GardenHCI extends JFrame {
         jLabelHelp4.setFont(new Font( "Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
         JLabel jLabelHelp5 = new JLabel("<html><body>5. \"exit\" [chiffre]<br/>Pour quitter.</body></html>");//TODO: (pour developper), a supprimer
         jLabelHelp5.setFont(new Font( "Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
+
         panelHelp.add(jLabelHelpTitle);
         panelHelp.add(jLabelHelp1);
         panelHelp.add(jLabelHelp2);
         panelHelp.add(jLabelHelp3);
+
         panelHelp.add(jLabelHelp4); //TODO: (pour developper), a supprimer
         panelHelp.add(jLabelHelp5); //TODO: (pour developper), a supprimer
         panelHelp.setLayout(new GridLayout(5, 0));
@@ -125,6 +131,7 @@ public class GardenHCI extends JFrame {
     }
 
     public void uploadTemperature(float temperature){
+
         this.temperature = temperature;
         labelTemperature.setText("Temperature : " + temperature + " °C");
         System.out.println(">>> temperature uploaded : " + temperature);
@@ -149,6 +156,7 @@ public class GardenHCI extends JFrame {
     }
 
     void uploadLuminosity(float luminosity){
+
         this.luminosity = luminosity;
         labelLuminosity.setText("Luminosité : " + luminosity);
     }

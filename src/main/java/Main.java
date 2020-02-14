@@ -1,5 +1,8 @@
 import org.eclipse.paho.client.mqttv3.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,7 +12,7 @@ public class Main implements MqttCallback {
     private static final String TOPIC_NAME = "topic";
     private static ArduinoHelper arduinoHelper;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         MqttClient client;
 
         try {
@@ -21,18 +24,18 @@ public class Main implements MqttCallback {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        Set<Floor> allFloors = new HashSet<>(Arrays.asList(
+                new Floor(1, ""),
+                new Floor(2, ""),
+                new Floor(3, "")));
+
+        Garden garden = new Garden(allFloors);
+
         GardenHCI myGardenHCI = new GardenHCI();
         myGardenHCI.laucheInterface();
 
         arduinoHelper = new ArduinoHelper();
         arduinoHelper.GetMessageFromArduino(myGardenHCI);
-//        System.out.println(arduinoHelper.getLight());
-//        System.out.println("oooooooooooo");
-//
-//        while(true){
-//            System.out.println(arduinoHelper.getLight() + "----------------");
-//        }
-
     }
 
     public void connectionLost(Throwable cause) {

@@ -1,9 +1,18 @@
+import java.util.Hashtable;
+
+import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamDiscoveryEvent;
 
 class WebcamExample {
 
+    private Hashtable<String, Webcam> webcamList = new Hashtable<>();
+
+    private void updateWebcamList(){
+        this.webcamList = WebcamUtil.getWebcamList();
+    }
+
     private static Void connected(WebcamDiscoveryEvent e){
-        System.out.println(e.getWebcam().getName() + " connected");
+        System.out.println(e.getWebcam().getName() + " connected, list updated");
         return null;
     }
 

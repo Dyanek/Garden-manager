@@ -1,6 +1,10 @@
 import javax.sound.sampled.*;
 import java.io.*;
 
+/**
+ * Microphone Util
+ * @see MicrophoneExample.java
+ */
 class MicrophoneUtil {
 
     // the line from which audio data is captured
@@ -53,6 +57,5 @@ class MicrophoneUtil {
     public void finish() {
         line.stop();
         line.close();
-        System.out.println("Finished");
     }
 }

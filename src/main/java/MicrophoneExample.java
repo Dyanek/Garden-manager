@@ -21,8 +21,8 @@ class MicrophoneExample {
                 System.out.println("write to file");
                 try {
                     mic.record(AudioFileFormat.Type.WAVE, new File("audio.wav"));
-                    System.out.println("done");
                     mic.finish();
+                    System.out.println("done");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

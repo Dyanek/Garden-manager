@@ -26,11 +26,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.eclipse.paho</groupId>
-            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-            <version>1.2.1</version>
-        </dependency>
 
         <dependency>
             <groupId>com.fazecast</groupId>
@@ -44,6 +39,7 @@
             <artifactId>webcam-capture</artifactId>
             <version>0.3.12</version>
         </dependency>
+
     </dependencies>
 
 </project>

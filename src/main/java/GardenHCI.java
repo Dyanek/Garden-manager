@@ -82,37 +82,27 @@ public class GardenHCI extends JFrame {
             this.cameraJPanels[i].setBorder(new LineBorder(Color.gray));
             this.cameraJPanels[i].add(new JLabel("Camera " + i));
         }
-
-        // // camera 1
-        // this.panelCamera1 = new WebcamPanel(Webcam.getDefault());// TODO: to change
-        // with the real camera
-        // this.panelCamera1.setBorder(new LineBorder(Color.gray));
-        // // camera 2
-        // this.panelCamera2 = new JPanel();
-        // this.panelCamera2.setBorder(new LineBorder(Color.gray));
-        // JLabel labelCamera2 = new JLabel("Caméra 2");
-        // panelCamera2.add(labelCamera2);
-        // // camera 3
-        // this.panelCamera3 = new JPanel();
-        // this.panelCamera3.setBorder(new LineBorder(Color.gray));
-        // JLabel labelCamera3 = new JLabel("Caméra 3");
-        // panelCamera3.add(labelCamera3);
+      
         // panelWelcomeInfo
         this.panelWelcomeInfo = new JPanel();
         this.panelWelcomeInfo.setBorder(new LineBorder(Color.gray));
         labelTemperature = new JLabel("Temperature : " + temperature + " °C", SwingConstants.CENTER);
         labelLuminosity = new JLabel("Luminosité : " + luminosity, SwingConstants.CENTER);
+
         labelPH = new JLabel("PH : " + ph, SwingConstants.CENTER);
+
         labelTemperature.setFont(new Font("Serif", Font.BOLD, 12));
         labelLuminosity.setFont(new Font("Serif", Font.BOLD, 12));
         labelPH.setFont(new Font("Serif", Font.BOLD, 12));
         JLabel labelHelp = new JLabel("Dites \"Aide\" pour afficher la liste des commandes disponibles",
                 SwingConstants.CENTER);
+
         panelWelcomeInfo.add(labelTemperature);
         panelWelcomeInfo.add(labelLuminosity);
         panelWelcomeInfo.add(labelPH);
         panelWelcomeInfo.add(labelHelp);
         panelWelcomeInfo.setLayout(new GridLayout(5, 0));
+
     }
 
     private void initHelp() { // TODO: mis à jour avec les informations correspondants
@@ -126,6 +116,7 @@ public class GardenHCI extends JFrame {
                 "<html><body>2. \"arroser\" [tout/1/2/3]<br/>Pour arroser tous les étages ou tel étage.</body></html>");
         jLabelHelp2.setFont(new Font("Serif", Font.BOLD, 15));
         JLabel jLabelHelp3 = new JLabel("<html><body>3. \"arreter arrosage\"<br/>Pour arreter arrosage.</body></html>");
+
         jLabelHelp3.setFont(new Font("Serif", Font.BOLD, 15));
         JLabel jLabelHelp4 = new JLabel(
                 "<html><body>4. \"temperature/watersensorvaluefloor1(2/3)/ph/luminosite\" [chiffre]<br/>Pour mis a jour la valeur correspondante(pour developper).</body></html>");// TODO:
@@ -140,12 +131,15 @@ public class GardenHCI extends JFrame {
                                                                                                              // a
                                                                                                              // supprimer
         jLabelHelp5.setFont(new Font("Serif", Font.BOLD, 15));// TODO: (pour developper), a supprimer
+
         panelHelp.add(jLabelHelpTitle);
         panelHelp.add(jLabelHelp1);
         panelHelp.add(jLabelHelp2);
         panelHelp.add(jLabelHelp3);
+
         panelHelp.add(jLabelHelp4); // TODO: (pour developper), a supprimer
         panelHelp.add(jLabelHelp5); // TODO: (pour developper), a supprimer
+
         panelHelp.setLayout(new GridLayout(5, 0));
     }
 

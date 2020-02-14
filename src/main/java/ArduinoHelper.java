@@ -1,6 +1,8 @@
 import com.fazecast.jSerialComm.SerialPort;
+
 import java.io.IOException;
 import java.util.Scanner;
+
 import static java.lang.Short.valueOf;
 
 class ArduinoHelper {
@@ -51,7 +53,7 @@ class ArduinoHelper {
         return valueOf(res);
     }
 
-    void GetMessageFromArduino(GardenHCI gradinHCI)
+    void GetMessageFromArduino(GardenHCI gardenHCI)
     {
         try
         {
@@ -72,15 +74,18 @@ class ArduinoHelper {
                     if(str.contains("Light"))
                     {
                         light = getValue(str);
-                        gradinHCI.uploadLuminosity(light);
+                      
+                        gardenHCI.uploadLuminosity(light);
+
 //                        System.out.println("light value = " + this.light);
                     }
 
                     if(str.contains("PH"))
                     {
                         float tmp  = getValue(str);
-                        PH = tmp/100;
-                        gradinHCI.uploadPH(PH);
+                        PH = tmp/100;r
+                        gardenHCI.uploadPH(PH);
+                      
 //                        System.out.println("PH value = " + this.PH);
                     }
                 }

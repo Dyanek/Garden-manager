@@ -25,7 +25,19 @@ public class Main implements MqttCallback {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        GardenHCI myGradinHCI = new GardenHCI();
+        myGradinHCI.launchHCI();
+
         arduinoHelper = new ArduinoHelper();
+        arduinoHelper.GetMessageFromArduino(myGradinHCI);
+//        System.out.println(arduinoHelper.getLight());
+//        System.out.println("oooooooooooo");
+//
+//        while(true){
+//            System.out.println(arduinoHelper.getLight() + "----------------");
+//        }
+
+
     }
 
     public void connectionLost(Throwable cause) {

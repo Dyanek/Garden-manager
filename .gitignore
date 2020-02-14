@@ -47,9 +47,7 @@ src/main/resources/config.properties
 
 # vscode settings
 .vscode/
-
-# classpath
+.settings/
 .classpath
+.project
 
-# audio thing
-audio.wav

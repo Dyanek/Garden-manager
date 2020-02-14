@@ -11,32 +11,8 @@ import com.github.sarxos.webcam.WebcamDiscoveryListener;
  * webcam connection / disconnection event listener
  * 
  * @package main/java
- * @see WebcamExample.java
  */
-class WebcamUtil implements WebcamDiscoveryListener{
-    private Function <WebcamDiscoveryEvent,Void> webcamConnectionEvent;
-    private Function <WebcamDiscoveryEvent, Void> webcamDisconnectionEvent;
-
-    /**
-     * webcam connection event listener
-     * @param {Function<WebcamDiscoveryEvent>} func
-     * @return {WebcamStream}
-     */
-    public WebcamUtil onConnection(Function <WebcamDiscoveryEvent, Void> func){
-        this.webcamConnectionEvent = func;
-        return this;
-    }
-
-    /**
-     * webcam disconnection event listener
-     * @param {Function<WebcamDiscoveryEvent>} func
-     * @return {WebcamStream}
-     */
-    public WebcamUtil onDisonnection(Function <WebcamDiscoveryEvent, Void> func){
-        this.webcamDisconnectionEvent = func;
-        return this;
-    }
-
+class WebcamUtil{
     /**
      * get webcam list
      * @static
@@ -48,15 +24,5 @@ class WebcamUtil implements WebcamDiscoveryListener{
             webcamList.put(webcam.getName(), webcam);
         }
         return webcamList;
-    }
-
-    @Override
-	public void webcamFound(WebcamDiscoveryEvent event) {
-		this.webcamConnectionEvent.apply(event);
-	}
-
-	@Override
-	public void webcamGone(WebcamDiscoveryEvent event) {
-        this.webcamDisconnectionEvent.apply(event);
-    }  
+    } 
 }

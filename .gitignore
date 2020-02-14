@@ -50,3 +50,6 @@ src/main/resources/config.properties
 
 # classpath
 .classpath
+
+# audio thing
+audio.wav

@@ -26,7 +26,7 @@ public class Main implements MqttCallback {
         }
 
         GardenHCI myGradinHCI = new GardenHCI();
-        myGradinHCI.launchHCI();
+        myGradinHCI.launchHCI(1, 2, 3, 4, 5, 6);
 
         arduinoHelper = new ArduinoHelper();
         arduinoHelper.GetMessageFromArduino(myGradinHCI);

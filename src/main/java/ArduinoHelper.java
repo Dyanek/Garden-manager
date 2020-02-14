@@ -10,7 +10,7 @@ class ArduinoHelper {
 
     private SerialPort serialPort;
 
-    int light, temperature;
+    int light, temperature, light2;
     float PH, water;
 
     public int getLight() {
@@ -61,7 +61,7 @@ class ArduinoHelper {
             {
                 while (serialPort.bytesAvailable() == 0)
                 {
-                    Thread.sleep(1000);
+                    Thread.sleep(1173);
                 }
 
                 Scanner data = new Scanner(serialPort.getInputStream());
@@ -71,11 +71,17 @@ class ArduinoHelper {
                 {
                     String str = data.nextLine();
                     System.out.println(str);
-                    if(str.contains("Light"))
+                    if (str.contains("LightOne"))
                     {
                         light = getValue(str);
                         jardin.uploadLuminosity(light);
 //                        System.out.println("light value = " + this.light);
+                    }
+
+                    if (str.contains("LightTwo")) {
+                        light2 = getValue(str);
+//                        jardin.uploadLuminosity(light);
+                        System.out.println("light2 value = " + this.light2);
                     }
 
                     if(str.contains("PH"))

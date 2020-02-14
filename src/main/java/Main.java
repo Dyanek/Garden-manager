@@ -24,6 +24,9 @@ public class Main implements MqttCallback {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        GardenHCI myGradinHCI = new GardenHCI();
+        myGradinHCI.launchHCI(1, 2, 3, 4, 5, 6);
+
         Set<Floor> allFloors = new HashSet<>(Arrays.asList(
                 new Floor(1, ""),
                 new Floor(2, ""),

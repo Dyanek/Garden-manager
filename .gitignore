@@ -47,3 +47,6 @@ src/main/resources/config.properties
 
 # vscode settings
 .vscode/
+
+# classpath
+.classpath

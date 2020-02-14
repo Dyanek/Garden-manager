@@ -45,7 +45,11 @@ public class GardenHCI extends JFrame {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void initWelcome(){// TODO: Init with real value(temperapure, humidité, etc...)
+    private void initWelcome(float temperature, float luminosity, float ph) {// TODO: Init with real value(temperapure, humidité, etc...)
+        this.temperature = temperature;
+        this.luminosity = luminosity;
+        this.ph = ph;
+
         // camera 1
         this.panelCamera1 = new WebcamPanel(Webcam.getDefault());// TODO: to change with the real camera
         this.panelCamera1.setBorder(new LineBorder(Color.gray));
@@ -99,7 +103,11 @@ public class GardenHCI extends JFrame {
         panelHelp.setLayout(new GridLayout(5, 0));
     }
 
-    public void initWater(){
+    public void initWater(int waterSensorValueFloor1, int waterSensorValueFloor2, int waterSensorValueFloor3) {
+        this.waterSensorValueFloor1 = waterSensorValueFloor1;
+        this.waterSensorValueFloor2 = waterSensorValueFloor2;
+        this.waterSensorValueFloor3 = waterSensorValueFloor3;
+
         panelWater = new JPanel();
         panelWater.setLayout(new GridLayout(5,0));
         jLabelWaterSubTitle = new JLabel("Taux de humidite : \n");
@@ -108,11 +116,11 @@ public class GardenHCI extends JFrame {
         jLabelWaterSensor3 = new JLabel("    Etage 3 : " + waterSensorValueFloor3 + "%");
     }
 
-    public void launchHCI(){
+    public void launchHCI(float temperature, float luminosity, float ph, int waterSensorValueFloor1, int waterSensorValueFloor2, int waterSensorValueFloor3) {
         initHCI();
-        initWelcome();
+        initWelcome(temperature, luminosity, ph);
         initHelp();
-        initWater();
+        initWater(waterSensorValueFloor1, waterSensorValueFloor2, waterSensorValueFloor3);
         displayWelcome();
     }
 
@@ -290,7 +298,7 @@ public class GardenHCI extends JFrame {
 
     public static void main(String[] args) {
         GardenHCI myGradinHCI = new GardenHCI();
-        myGradinHCI.launchHCI();
+        myGradinHCI.launchHCI(1, 2, 3, 4, 5, 6);
         myGradinHCI.getCommande();
     }
 };

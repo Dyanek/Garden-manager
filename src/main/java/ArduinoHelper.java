@@ -1,6 +1,8 @@
 import com.fazecast.jSerialComm.SerialPort;
+
 import java.io.IOException;
 import java.util.Scanner;
+
 import static java.lang.Short.valueOf;
 
 class ArduinoHelper {
@@ -8,8 +10,8 @@ class ArduinoHelper {
 
     private SerialPort serialPort;
 
-    int light;
-    float PH;
+    int light, temperature;
+    float PH, water;
 
     public int getLight() {
         return light;
@@ -83,6 +85,19 @@ class ArduinoHelper {
                         jardin.uploadPH(PH);
 //                        System.out.println("PH value = " + this.PH);
                     }
+
+                    if (str.contains("Temperature")) {
+                        temperature = getValue(str);
+                        jardin.uploadTemperature(temperature);
+                        System.out.println("Temperature value = " + this.temperature);
+                    }
+
+                    if (str.contains("Water")) {
+                        water = getValue(str);
+//                        jardin.uploadWater(water);
+                        System.out.println("Water value = " + this.water);
+                    }
+
                 }
             }
         }

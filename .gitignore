@@ -44,3 +44,10 @@ buildNumber.properties
 
 # config
 src/main/resources/config.properties
+
+# vscode settings
+.vscode/
+.settings/
+.classpath
+.project
+

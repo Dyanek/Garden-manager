@@ -39,6 +39,10 @@ class Garden {
         selectedFloors.addAll(allFloors);
     }
 
+    Set<Floor> getAllFloors() {
+        return allFloors;
+    }
+
     Floor getFloor(int floorId) {
         for (Floor floor : allFloors) {
             if (floor.getFloorId() == floorId)

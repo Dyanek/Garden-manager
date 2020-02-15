@@ -32,18 +32,19 @@ abstract class Sensor {
     }
 
     void addValue(Float value) {
-        if (isValueToBeAdded())
+        if (isValueToBeAdded()) {
             lastValues.put(Instant.now(), value);
 
-        if (lastValues.size() > 24)
-            lastValues.pollFirstEntry();
+            if (lastValues.size() > 24)
+                lastValues.pollFirstEntry();
+        }
     }
 
-    private boolean isValueToBeAdded() {
+    boolean isValueToBeAdded() {
         if (lastValues.size() == 0)
             return true;
 
-        Instant instantToBeCompared = lastValues.lastKey().plus(1, ChronoUnit.MINUTES);
+        Instant instantToBeCompared = lastValues.lastKey().plus(1, ChronoUnit.SECONDS);
 
         return Instant.now().compareTo(instantToBeCompared) >= 0;
     }

@@ -30,11 +30,11 @@ class Floor {
         return waterSensor;
     }
 
-    Floor(int floorId, String webcamName) {
+    Floor(int floorId, Webcam webcam) {
         this.floorId = floorId;
         this.pumpIsActive = false;
         this.lightIsActive = false;
-        this.camera = Webcam.getWebcamByName(webcamName);
+        this.camera = webcam;
 
         this.aciditySensor = new AciditySensor();
         aciditySensor.addValue(7.1f);

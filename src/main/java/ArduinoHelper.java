@@ -42,7 +42,7 @@ class ArduinoHelper {
         return valueOf(res.toString());
     }
 
-    void GetMessageFromArduino(Garden garden) {
+    void GetMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
         try {
             while (true) {
                 while (serialPort.bytesAvailable() == 0) {
@@ -59,13 +59,23 @@ class ArduinoHelper {
                     if (str.contains("Light")) {
                         int light = getValue(str);
 
-                        garden.getFloor(1).getBrightnessSensor().addValue((float) light);
+                        if (garden.getFloor(1).getBrightnessSensor().isValueToBeAdded()) {
+                            garden.getFloor(1).getBrightnessSensor().addValue((float) light);
+                            gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
+                        }
                     }
 
                     if (str.contains("PH")) {
                         float tmp = getValue(str);
                         float ph = tmp / 100;
+
                         garden.getFloor(2).getAciditySensor().addValue(ph);
+                    }
+
+                    if (str.contains("temperature")) {
+                        float temperature = getValue(str);
+                        garden.getFloor(2).getAciditySensor().addValue(temperature);
+                        gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
                     }
                 }
             }

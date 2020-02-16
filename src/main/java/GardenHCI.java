@@ -1,12 +1,20 @@
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 class GardenHCI extends JFrame {
 
@@ -254,6 +262,55 @@ class GardenHCI extends JFrame {
         mainPanel.add(cameraPanels[floorId - 1]);
         mainPanel.add(informationPanel);
 
+        this.mainPanel.repaint();
+        this.jFrame.validate();
+    }
+
+    private static XYDataset createDataset(TreeMap<Instant, Float> lastValues, String titleChart) {
+        double[][] data = {new double[lastValues.size()], new double[lastValues.size()]};
+        int indiceData = 0;
+        for (Instant key : lastValues.keySet()) {
+            Float value = lastValues.get(key);
+            data[0][indiceData] = (double) (indiceData);
+            data[1][indiceData] = Double.valueOf(value);
+            indiceData++;
+        }
+        DefaultXYDataset ds = new DefaultXYDataset();
+        ds.addSeries(titleChart, data);
+        return ds;
+    }
+
+    void displayChart(Class sensorType, int floorId) {
+        Sensor sensor;
+        String chartTitle;
+        if (sensorType.equals(TemperatureSensor.class)) {
+            sensor = garden.getTemperatureSensor();
+            chartTitle = "Capteur température";
+        } else if (sensorType.equals(HumiditySensor.class)) {
+            sensor = garden.getHumiditySensor();
+            chartTitle = "Capteur humidité";
+        } else if (sensorType.equals(WaterSensor.class)) {
+            sensor = garden.getFloor(floorId).getWaterSensor();
+            chartTitle = "Capteur d'eau étage " + floorId;
+        } else if (sensorType.equals(BrightnessSensor.class)) {
+            sensor = garden.getFloor(floorId).getBrightnessSensor();
+            chartTitle = "Capteur luminosité étage " + floorId;
+        } else if (sensorType.equals(AciditySensor.class)) {
+            sensor = garden.getFloor(floorId).getAciditySensor();
+            chartTitle = "Capteur HP de l'étage " + floorId;
+        } else
+            throw new IllegalStateException("Unexpected value: " + sensorType);
+
+        XYDataset ds = createDataset(sensor.getLastValues(), chartTitle);
+        JFreeChart chart = ChartFactory.createXYLineChart(chartTitle,
+                "temps", "valeur", ds, PlotOrientation.VERTICAL, true, true,
+                false);
+
+        ChartPanel cp = new ChartPanel(chart);
+
+        mainPanel.removeAll();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(cp, BorderLayout.CENTER);
         this.mainPanel.repaint();
         this.jFrame.validate();
     }

@@ -7,23 +7,12 @@ import static java.lang.Short.valueOf;
 
 class ArduinoHelper {
 
-
     private SerialPort serialPort;
-
-    int light, temperature;
-    float PH, water, water2;
-
-    public int getLight() {
-        return light;
-    }
-
-
 
     ArduinoHelper() {
         serialPort = SerialPort.getCommPort("/dev/cu.usbmodem14101");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 3527, 3527);
-
 
         try {
             serialPort.openPort();
@@ -44,78 +33,51 @@ class ArduinoHelper {
     }
 
     public static int getValue(String str) {
-
-        String res = "";
-
+        StringBuilder res = new StringBuilder();
         for (int j = 0; j < str.length(); j++) {
             if (str.charAt(j) >= 48 && str.charAt(j) <= 57) {
-                res += str.charAt(j);
+                res.append(str.charAt(j));
             }
         }
-        return valueOf(res);
+        return valueOf(res.toString());
     }
 
-    void GetMessageFromArduino(Jardin jardin)
-    {
-        try
-        {
-            while (true)
-            {
-                while (serialPort.bytesAvailable() == 0)
-                {
-                    Thread.sleep(1173);
+    void GetMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
+        try {
+            while (true) {
+                while (serialPort.bytesAvailable() == 0) {
+                    Thread.sleep(1000);
                 }
 
                 Scanner data = new Scanner(serialPort.getInputStream());
 
                 int i = 0;
-                while (data.hasNext())
-                {
+                while (data.hasNext()) {
                     String str = data.nextLine();
-                    if (str.equals("")) {
-                        continue;
-                    }
                     System.out.println(str);
-                    if (str.contains("Light"))
-                    {
-                        light = getValue(str);
-                        jardin.uploadLuminosity(light);
-//                        System.out.println("light value = " + this.light);
+
+                    if (str.contains("Light")) {
+                        int light = getValue(str);
+
+                        garden.getFloor(1).getBrightnessSensor().addValue((float) light);
+                        gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
                     }
 
-                    if (str.contains("PH") && str.equals(""))
-                    {
-                        float tmp  = getValue(str);
-                        PH = tmp/100;
-                        jardin.uploadPH(PH);
-//                        System.out.println("PH value = " + this.PH);
+                    if (str.contains("PH")) {
+                        float tmp = getValue(str);
+                        float ph = tmp / 100;
+
+                        garden.getFloor(2).getAciditySensor().addValue(ph);
                     }
 
-                    if (str.contains("Temperature")) {
-                        temperature = getValue(str);
-                        jardin.uploadTemperature(temperature);
-                        System.out.println("Temperature value = " + this.temperature);
+                    if (str.contains("temperature")) {
+                        float temperature = getValue(str);
+                        garden.getFloor(2).getAciditySensor().addValue(temperature);
+                        gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
                     }
-
-                    if (str.contains("Water")) {
-                        water = getValue(str);
-//                        jardin.uploadWater(water);
-                        System.out.println("Water value = " + this.water);
-                    }
-
-                    if (str.contains("WaterTwo")) {
-                        water2 = getValue(str);
-//                        jardin.uploadWater(water);
-                        System.out.println("Water2 value = " + this.water2);
-                    }
-
-
-
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

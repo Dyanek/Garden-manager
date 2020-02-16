@@ -1,59 +1,35 @@
-import org.eclipse.paho.client.mqttv3.*;
+import com.github.sarxos.webcam.Webcam;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class Main implements MqttCallback {
-
-    private static final String SERVER_URI = "tcp://127.0.0.1";
-    private static final String TOPIC_NAME = "topic";
-    private static ArduinoHelper arduinoHelper;
+public class Main {
 
     public static void main(String[] args) {
-        MqttClient client;
 
-        try {
-            client = new MqttClient(SERVER_URI, MqttClient.generateClientId());
-            client.setCallback(new Main());
-            client.connect();
-            client.subscribe(TOPIC_NAME);
-        } catch (MqttException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        Garden garden = initGarden();
+
+        GardenHCI gardenHCI = new GardenHCI(garden);
+
+        ArduinoHelper arduinoHelper = new ArduinoHelper();
+        arduinoHelper.GetMessageFromArduino(garden, gardenHCI);
+
+        gardenHCI.launchHCI();
+    }
+
+    private static Garden initGarden() {
+        List<Floor> floors = new ArrayList<>();
+        List<Webcam> webcams = Webcam.getWebcams();
+
+        for (int i = 1; i <= 3; i++) {
+            Webcam webcam = webcams.size() >= i ? webcams.get(i - 1) : null;
+            floors.add(new Floor(i, webcam));
         }
 
-        Jardin myJardin = new Jardin();
-        myJardin.laucheInterface();
+        Set<Floor> allFloors = new HashSet<>(floors);
 
-        arduinoHelper = new ArduinoHelper();
-        arduinoHelper.GetMessageFromArduino(myJardin);
-//        System.out.println(arduinoHelper.getLight());4
-//        System.out.println("oooooooooooo");
-//
-//        while(true){
-//            System.out.println(arduinoHelper.getLight() + "----------------");
-//        }
-
-
-    }
-
-    public void connectionLost(Throwable cause) {
-        System.out.println("-------------------------------------------------");
-        System.out.println("Connection lost");
-        System.out.println("-------------------------------------------------");
-    }
-
-    public void messageArrived(String topic, MqttMessage message) {
-        System.out.println("-------------------------------------------------");
-        System.out.println("| Topic:" + topic);
-        System.out.println("| Message: " + new String(message.getPayload()));
-        System.out.println("-------------------------------------------------");
-
-        arduinoHelper.SendMessageToArduino(message.getPayload());
-    }
-
-    public void deliveryComplete(IMqttDeliveryToken imdt) {
-        System.out.println("-------------------------------------------------");
-        System.out.println("Delivery complete");
-        System.out.println("-------------------------------------------------");
+        return new Garden(allFloors);
     }
 }

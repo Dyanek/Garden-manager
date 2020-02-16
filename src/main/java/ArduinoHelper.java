@@ -10,8 +10,8 @@ class ArduinoHelper {
 
     private SerialPort serialPort;
 
-    int light, temperature, light2;
-    float PH, water;
+    int light, temperature;
+    float PH, water, water2;
 
     public int getLight() {
         return light;
@@ -44,7 +44,9 @@ class ArduinoHelper {
     }
 
     public static int getValue(String str) {
+
         String res = "";
+
         for (int j = 0; j < str.length(); j++) {
             if (str.charAt(j) >= 48 && str.charAt(j) <= 57) {
                 res += str.charAt(j);
@@ -70,21 +72,18 @@ class ArduinoHelper {
                 while (data.hasNext())
                 {
                     String str = data.nextLine();
+                    if (str.equals("")) {
+                        continue;
+                    }
                     System.out.println(str);
-                    if (str.contains("LightOne"))
+                    if (str.contains("Light"))
                     {
                         light = getValue(str);
                         jardin.uploadLuminosity(light);
 //                        System.out.println("light value = " + this.light);
                     }
 
-                    if (str.contains("LightTwo")) {
-                        light2 = getValue(str);
-//                        jardin.uploadLuminosity(light);
-                        System.out.println("light2 value = " + this.light2);
-                    }
-
-                    if(str.contains("PH"))
+                    if (str.contains("PH") && str.equals(""))
                     {
                         float tmp  = getValue(str);
                         PH = tmp/100;
@@ -103,6 +102,14 @@ class ArduinoHelper {
 //                        jardin.uploadWater(water);
                         System.out.println("Water value = " + this.water);
                     }
+
+                    if (str.contains("WaterTwo")) {
+                        water2 = getValue(str);
+//                        jardin.uploadWater(water);
+                        System.out.println("Water2 value = " + this.water2);
+                    }
+
+
 
                 }
             }

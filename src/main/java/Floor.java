@@ -2,38 +2,34 @@ import com.github.sarxos.webcam.Webcam;
 
 class Floor {
     private int floorId;
-    private boolean pumpIsActive; // Useful ?
-    private boolean lightIsActive; // Useful ?
     private Webcam camera;
 
     private AciditySensor aciditySensor;
     private BrightnessSensor brightnessSensor;
     private WaterSensor waterSensor;
 
-    public int getFloorId() {
+    int getFloorId() {
         return floorId;
     }
 
-    public Webcam getCamera() {
+    Webcam getCamera() {
         return camera;
     }
 
-    public AciditySensor getAciditySensor() {
+    AciditySensor getAciditySensor() {
         return aciditySensor;
     }
 
-    public BrightnessSensor getBrightnessSensor() {
+    BrightnessSensor getBrightnessSensor() {
         return brightnessSensor;
     }
 
-    public WaterSensor getWaterSensor() {
+    WaterSensor getWaterSensor() {
         return waterSensor;
     }
 
     Floor(int floorId, Webcam webcam) {
         this.floorId = floorId;
-        this.pumpIsActive = false;
-        this.lightIsActive = false;
         this.camera = webcam;
 
         this.aciditySensor = new AciditySensor();

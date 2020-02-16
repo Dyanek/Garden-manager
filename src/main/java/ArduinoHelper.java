@@ -59,10 +59,8 @@ class ArduinoHelper {
                     if (str.contains("Light")) {
                         int light = getValue(str);
 
-                        if (garden.getFloor(1).getBrightnessSensor().isValueToBeAdded()) {
-                            garden.getFloor(1).getBrightnessSensor().addValue((float) light);
-                            gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
-                        }
+                        garden.getFloor(1).getBrightnessSensor().addValue((float) light);
+                        gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
                     }
 
                     if (str.contains("PH")) {

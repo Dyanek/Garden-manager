@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 abstract class Sensor {
 
+    private Float currentValue;
     private TreeMap<Instant, Float> lastValues;
 
     Sensor() {
@@ -12,7 +13,7 @@ abstract class Sensor {
     }
 
     Float getCurrentValue() {
-        return lastValues.lastEntry().getValue();
+        return currentValue;
     }
 
     float getAverage() {
@@ -32,6 +33,8 @@ abstract class Sensor {
     }
 
     void addValue(Float value) {
+        currentValue = value;
+
         if (isValueToBeAdded()) {
             lastValues.put(Instant.now(), value);
 
@@ -40,7 +43,7 @@ abstract class Sensor {
         }
     }
 
-    boolean isValueToBeAdded() {
+    private boolean isValueToBeAdded() {
         if (lastValues.size() == 0)
             return true;
 

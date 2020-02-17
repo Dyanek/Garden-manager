@@ -268,12 +268,12 @@ class GardenHCI extends JFrame {
 
     private static XYDataset createDataset(TreeMap<Instant, Float> lastValues, String titleChart) {
         double[][] data = {new double[lastValues.size()], new double[lastValues.size()]};
-        int indiceData = 0;
+        int indexData = 0;
         for (Instant key : lastValues.keySet()) {
             Float value = lastValues.get(key);
-            data[0][indiceData] = (double) (indiceData);
-            data[1][indiceData] = Double.valueOf(value);
-            indiceData++;
+            data[0][indexData] = (double) (indexData);
+            data[1][indexData] = Double.valueOf(value);
+            indexData++;
         }
         DefaultXYDataset ds = new DefaultXYDataset();
         ds.addSeries(titleChart, data);

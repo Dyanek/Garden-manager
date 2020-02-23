@@ -285,19 +285,19 @@ class GardenHCI extends JFrame {
         String chartTitle;
         if (sensorType.equals(TemperatureSensor.class)) {
             sensor = garden.getTemperatureSensor();
-            chartTitle = "Capteur température";
+            chartTitle = "Capteur de température";
         } else if (sensorType.equals(HumiditySensor.class)) {
             sensor = garden.getHumiditySensor();
-            chartTitle = "Capteur humidité";
+            chartTitle = "Capteur d'humidité";
         } else if (sensorType.equals(WaterSensor.class)) {
             sensor = garden.getFloor(floorId).getWaterSensor();
             chartTitle = "Capteur d'eau étage " + floorId;
         } else if (sensorType.equals(BrightnessSensor.class)) {
             sensor = garden.getFloor(floorId).getBrightnessSensor();
-            chartTitle = "Capteur luminosité étage " + floorId;
+            chartTitle = "Capteur de luminosité étage " + floorId;
         } else if (sensorType.equals(AciditySensor.class)) {
             sensor = garden.getFloor(floorId).getAciditySensor();
-            chartTitle = "Capteur HP de l'étage " + floorId;
+            chartTitle = "Capteur d'acidité étage " + floorId;
         } else
             throw new IllegalStateException("Unexpected value: " + sensorType);
 
@@ -307,10 +307,22 @@ class GardenHCI extends JFrame {
                 false);
 
         ChartPanel cp = new ChartPanel(chart);
+        Panel chartInfoPanel = new Panel();
+        Label infoCurrentLabel = new Label("Valeur courante : " + sensor.getCurrentValue());
+        Label infoAverageLabel = new Label("Moyenne : " + sensor.getAverage());
+        Label infoMintLabel = new Label("Valeur minimum : " + sensor.getMinValue());
+        Label infoMaxLabel = new Label("Valeur maximum : " + sensor.getMaxValue());
+
+        chartInfoPanel.add(infoCurrentLabel);
+        chartInfoPanel.add(infoAverageLabel);
+        chartInfoPanel.add(infoMintLabel);
+        chartInfoPanel.add(infoMaxLabel);
+        chartInfoPanel.setLayout(new GridLayout(5, 0));
 
         mainPanel.removeAll();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(cp, BorderLayout.CENTER);
+        mainPanel.add(chartInfoPanel, BorderLayout.EAST);
         this.mainPanel.repaint();
         this.jFrame.validate();
     }
@@ -403,6 +415,7 @@ class GardenHCI extends JFrame {
                     else if (words[1].toLowerCase().equals("eclairage"))
                         stopAction(ActionType.LIGHTING);
                     break;
+
                 default:
                     System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
                     break;
@@ -415,6 +428,13 @@ class GardenHCI extends JFrame {
                 case "accueil":
                     displayWelcome();
                     break;
+                case "affiche": // TODO: a adapter avec le speechToText : affiche [Sensor.class] [nb floor]
+                    displayChart(TemperatureSensor.class, 0);
+                    break;
+                /*case "test": // Code pour tester Interface sans Arduino
+                    garden.getTemperatureSensor().getLastValues().put(Instant.now(), 5.5f);
+                    displayChart(TemperatureSensor.class, 0);
+                    break;*/
                 default:
                     System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
                     break;

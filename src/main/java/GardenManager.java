@@ -46,11 +46,11 @@ public class GardenManager {
         if (words.length == 2) {
             String firstWord = words[0].toLowerCase();
             switch (firstWord) {
-                case "temperature":
+                case "temperature"://TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getTemperatureSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
                     break;
-                case "humidite":
+                case "humidite"://TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getHumiditySensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshGardenSensorLabel(HumiditySensor.class);
                     break;
@@ -80,11 +80,40 @@ public class GardenManager {
                         floorId = Integer.parseInt(words[1]);
                         gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, floorId);
                     }
+                    break;
+                case "afficher":
+                    floorId = Integer.parseInt(words[1]);
+                    gardenHCI.displayFloorPanel(floorId);
+                    break;
                 case "arreter":
                     if (words[1].toLowerCase().equals("arrosage")) // TO DO : arroser quel étage ...
                         gardenHCI.stopAction(GardenHCI.ActionType.WATERING);
-                    else if (words[1].toLowerCase().equals("eclairage"))
+                    else if (words[1].toLowerCase().equals("éclairage"))
                         gardenHCI.stopAction(GardenHCI.ActionType.LIGHTING);
+                    break;
+                case "historique":
+                    if (words[1].equals("humidité"))
+                        gardenHCI.displayChart(HumiditySensor.class, -1);
+                    else if (words[1].equals("température"))
+                        gardenHCI.displayChart(TemperatureSensor.class, -1);
+                    break;
+                default:
+                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
+                    break;
+            }
+        } else if (words.length == 3) {
+            floorId = Integer.parseInt(words[2]);
+            switch (words[0].toLowerCase()) {
+                case "historique":
+                    if (words[1].equals("luminosité"))
+                        gardenHCI.displayChart(BrightnessSensor.class, floorId);
+                    else if (words[1].equals("acidité"))
+                        gardenHCI.displayChart(AciditySensor.class, floorId);
+                    else if (words[1].equals("eau"))
+                        gardenHCI.displayChart(WaterSensor.class, floorId);
+                    else {
+                        System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
+                    }
                     break;
                 default:
                     System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
@@ -98,10 +127,7 @@ public class GardenManager {
                 case "accueil":
                     gardenHCI.displayWelcome();
                     break;
-                case "affiche": // TODO: a adapter avec le speechToText : affiche [Sensor.class] [nb floor]
-                    gardenHCI.displayChart(TemperatureSensor.class, 0);
-                    break;
-                case "test": // Code pour tester Interface sans Arduino
+                case "test": // TODO : a suprrimer (pour tester Interface sans Arduino)
                     garden.getTemperatureSensor().getLastValues().put(Instant.now(), 5.5f);
                     gardenHCI.displayChart(TemperatureSensor.class, 0);
                     break;

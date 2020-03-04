@@ -264,6 +264,11 @@ class GardenHCI extends JFrame {
         this.jFrame.validate();
     }
 
+    public void displayFloorPanel(int floorId) {
+        //TODO
+        System.out.println("TO DO : displayFloorPanel " + floorId);
+    }
+
     private static XYDataset createDataset(TreeMap<Instant, Float> lastValues, String titleChart) {
         double[][] data = {new double[lastValues.size()], new double[lastValues.size()]};
         int indexData = 0;

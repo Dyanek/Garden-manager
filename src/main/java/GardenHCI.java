@@ -289,6 +289,9 @@ class GardenHCI extends JFrame {
         mainPanel.add(cameraPanels[floorId - 1]);
         mainPanel.add(informationPanel);
 
+        this.mainPanel.repaint();
+        this.jFrame.validate();
+
 
     }
 

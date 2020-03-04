@@ -1,5 +1,6 @@
 import com.github.sarxos.webcam.Webcam;
 
+import java.time.Instant;
 import java.util.*;
 
 public class GardenManager {
@@ -96,6 +97,13 @@ public class GardenManager {
                     break;
                 case "accueil":
                     gardenHCI.displayWelcome();
+                    break;
+                case "affiche": // TODO: a adapter avec le speechToText : affiche [Sensor.class] [nb floor]
+                    gardenHCI.displayChart(TemperatureSensor.class, 0);
+                    break;
+                case "test": // Code pour tester Interface sans Arduino
+                    garden.getTemperatureSensor().getLastValues().put(Instant.now(), 5.5f);
+                    gardenHCI.displayChart(TemperatureSensor.class, 0);
                     break;
                 default:
                     System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);

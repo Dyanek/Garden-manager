@@ -6,7 +6,6 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 class GardenHCI extends JFrame {
 
@@ -20,7 +19,7 @@ class GardenHCI extends JFrame {
     private List<GardenSensorLabel> gardenSensorLabels = new ArrayList<>();
     private List<FloorSensorLabel> floorSensorLabels = new ArrayList<>();
 
-    private enum ActionType {
+    enum ActionType {
         WATERING,
         LIGHTING
     }
@@ -36,7 +35,6 @@ class GardenHCI extends JFrame {
         initFloorsSensors();
 
         displayWelcome();
-        getCommand();
     }
 
     private void initHCI() {
@@ -91,7 +89,7 @@ class GardenHCI extends JFrame {
         }
     }
 
-    private void displayWelcome() {
+    void displayWelcome() {
         mainPanel.removeAll();
 
         // refactor cameraPanels
@@ -116,7 +114,7 @@ class GardenHCI extends JFrame {
         this.jFrame.validate();
     }
 
-    private void displayHelp() {
+    void displayHelp() {
         mainPanel.removeAll();
 
         JLabel jLabelHelpTitle = new JLabel("------ Aide ------", SwingConstants.CENTER);
@@ -146,7 +144,7 @@ class GardenHCI extends JFrame {
         jFrame.validate();
     }
 
-    private void displayActionOnAllFloorsPanel(ActionType actionType) {
+    void displayActionOnAllFloorsPanel(ActionType actionType) {
         mainPanel.removeAll();
         informationPanel.removeAll();
 
@@ -198,7 +196,7 @@ class GardenHCI extends JFrame {
         this.jFrame.validate();
     }
 
-    private void displayActionOnSpecificFloorPanel(ActionType actionType, int floorId) {
+    void displayActionOnSpecificFloorPanel(ActionType actionType, int floorId) {
         mainPanel.removeAll();
         informationPanel.removeAll();
 
@@ -271,7 +269,7 @@ class GardenHCI extends JFrame {
                 .forEach(FloorSensorLabel::refreshLabel);
     }
 
-    private void stopAction(ActionType actionType) {// TODO: stopWatering -> arreter quel étage ...
+    void stopAction(ActionType actionType) {// TODO: stopWatering -> arreter quel étage ...
         switch (actionType) {
             case WATERING:
                 garden.getAllFloors()
@@ -286,7 +284,7 @@ class GardenHCI extends JFrame {
     }
 
     // -- TEST a l'aide console --
-    private void getCommand() {
+    /*private void getCommand() {
         Scanner scanner = new Scanner(System.in);
         String input = "";
         while (!input.equals("exit")) {
@@ -364,5 +362,5 @@ class GardenHCI extends JFrame {
             }
         } else
             System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-    }
+    }*/
 }

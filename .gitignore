@@ -43,7 +43,7 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 # config
-src/main/resources/config.properties
+src/gardenManager/resources/config.properties
 
 # vscode settings
 .vscode/

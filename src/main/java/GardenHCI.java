@@ -13,7 +13,6 @@ import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.TreeMap;
 
 class GardenHCI extends JFrame {
@@ -28,7 +27,7 @@ class GardenHCI extends JFrame {
     private List<GardenSensorLabel> gardenSensorLabels = new ArrayList<>();
     private List<FloorSensorLabel> floorSensorLabels = new ArrayList<>();
 
-    private enum ActionType {
+    enum ActionType {
         WATERING,
         LIGHTING
     }
@@ -44,7 +43,6 @@ class GardenHCI extends JFrame {
         initFloorsSensors();
 
         displayWelcome();
-        getCommand();
     }
 
     private void initHCI() {
@@ -99,7 +97,7 @@ class GardenHCI extends JFrame {
         }
     }
 
-    private void displayWelcome() {
+    void displayWelcome() {
         mainPanel.removeAll();
 
         // refactor cameraPanels
@@ -124,7 +122,7 @@ class GardenHCI extends JFrame {
         this.jFrame.validate();
     }
 
-    private void displayHelp() {
+    void displayHelp() {
         mainPanel.removeAll();
 
         JLabel jLabelHelpTitle = new JLabel("------ Aide ------", SwingConstants.CENTER);
@@ -154,7 +152,7 @@ class GardenHCI extends JFrame {
         jFrame.validate();
     }
 
-    private void displayActionOnAllFloorsPanel(ActionType actionType) {
+    void displayActionOnAllFloorsPanel(ActionType actionType) {
         mainPanel.removeAll();
         informationPanel.removeAll();
 
@@ -206,7 +204,7 @@ class GardenHCI extends JFrame {
         this.jFrame.validate();
     }
 
-    private void displayActionOnSpecificFloorPanel(ActionType actionType, int floorId) {
+    void displayActionOnSpecificFloorPanel(ActionType actionType, int floorId) {
         mainPanel.removeAll();
         informationPanel.removeAll();
 
@@ -340,7 +338,7 @@ class GardenHCI extends JFrame {
                 .forEach(FloorSensorLabel::refreshLabel);
     }
 
-    private void stopAction(ActionType actionType) {// TODO: stopWatering -> arreter quel étage ...
+    void stopAction(ActionType actionType) {// TODO: stopWatering -> arreter quel étage ...
         switch (actionType) {
             case WATERING:
                 garden.getAllFloors()
@@ -354,92 +352,4 @@ class GardenHCI extends JFrame {
         displayWelcome();
     }
 
-    // -- TEST a l'aide console --
-    private void getCommand() {
-        Scanner scanner = new Scanner(System.in);
-        String input = "";
-        while (!input.equals("exit")) {
-            System.out.print("Dis-moi, qu'est-ce que tu veux hen ???(\"help\" if u need help O.O) : ");
-            input = scanner.nextLine();
-            processCommand(input);
-        }
-        System.out.println("Bye, à plus ^^");
-        System.exit(0);
-    }
-
-    private void processCommand(String c) {
-        String[] words = c.split(" ");
-
-        int floorId = -1;
-
-        if (words.length == 2) {
-            String firstWord = words[0].toLowerCase();
-            switch (firstWord) {
-                case "temperature":
-                    garden.getTemperatureSensor().addValue(Float.valueOf(words[1]));
-                    refreshGardenSensorLabel(TemperatureSensor.class);
-                    break;
-                case "humidite":
-                    garden.getHumiditySensor().addValue(Float.valueOf(words[1]));
-                    refreshGardenSensorLabel(HumiditySensor.class);
-                    break;
-                case "watersensorvaluefloor1":
-                    garden.getFloor(1).getWaterSensor().addValue(Float.valueOf(words[1]));
-                    refreshFloorSensorLabel(WaterSensor.class, 1);
-                    break;
-                case "watersensorvaluefloor2":
-                    garden.getFloor(2).getWaterSensor().addValue(Float.valueOf(words[1]));
-                    refreshFloorSensorLabel(WaterSensor.class, 2);
-                    break;
-                case "watersensorvaluefloor3":
-                    garden.getFloor(3).getWaterSensor().addValue(Float.valueOf(words[1]));
-                    refreshFloorSensorLabel(WaterSensor.class, 3);
-                case "arroser":
-                    if (words[1].toLowerCase().equals("tout"))
-                        displayActionOnAllFloorsPanel(ActionType.WATERING);
-                    else {
-                        floorId = Integer.parseInt(words[1]);
-                        displayActionOnSpecificFloorPanel(ActionType.WATERING, floorId);
-                    }
-                    break;
-                case "allumer":
-                    if (words[1].toLowerCase().equals("tout"))
-                        displayActionOnAllFloorsPanel(ActionType.LIGHTING);
-                    else {
-                        floorId = Integer.parseInt(words[1]);
-                        displayActionOnSpecificFloorPanel(ActionType.LIGHTING, floorId);
-                    }
-                case "arreter":
-                    if (words[1].toLowerCase().equals("arrosage")) // TO DO : arroser quel étage ...
-                        stopAction(ActionType.WATERING);
-                    else if (words[1].toLowerCase().equals("eclairage"))
-                        stopAction(ActionType.LIGHTING);
-                    break;
-
-                default:
-                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-                    break;
-            }
-        } else if (words.length == 1) {
-            switch (words[0].toLowerCase()) {
-                case "aide":
-                    displayHelp();
-                    break;
-                case "accueil":
-                    displayWelcome();
-                    break;
-                case "affiche": // TODO: a adapter avec le speechToText : affiche [Sensor.class] [nb floor]
-                    displayChart(TemperatureSensor.class, 0);
-                    break;
-                /*case "test": // Code pour tester Interface sans Arduino
-                    garden.getTemperatureSensor().getLastValues().put(Instant.now(), 5.5f);
-                    displayChart(TemperatureSensor.class, 0);
-                    break;*/
-                default:
-                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-                    break;
-            }
-        } else
-            System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-    }
 }

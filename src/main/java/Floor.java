@@ -42,27 +42,15 @@ class Floor {
         waterSensor.addValue(5.5f);
     }
 
-    void turnOnLight() {
-        // TODO
-    }
-
-    void turnOffLight() {
-        // TODO
-    }
-
-    void startWater() {
-        // TODO
-    }
-
-    void stopWater() {
-        // TODO
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Floor)) return false;
-        Floor floor = (Floor) o;
-        return floorId == floor.floorId;
+        if (this == o)
+            return true;
+
+        if (!(o instanceof Floor))
+            return false;
+
+        Floor otherFloor = (Floor) o;
+        return this.floorId == otherFloor.floorId;
     }
 }

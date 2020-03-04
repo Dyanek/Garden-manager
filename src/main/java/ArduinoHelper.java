@@ -17,7 +17,6 @@ class ArduinoHelper {
         try {
             serialPort.openPort();
             System.out.println("Port is open");
-
         } catch (Exception ex) {
             System.out.println("Failed to open port: " + ex);
         }
@@ -32,7 +31,7 @@ class ArduinoHelper {
         }
     }
 
-    public static int getValue(String str) {
+    private static int getValue(String str) {
         StringBuilder res = new StringBuilder();
         for (int j = 0; j < str.length(); j++) {
             if (str.charAt(j) >= 48 && str.charAt(j) <= 57) {

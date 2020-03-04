@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 class GardenSensorLabel extends SensorLabel {
+
     private String labelName;
 
     GardenSensorLabel(Sensor sensor, String labelName, String unit) {

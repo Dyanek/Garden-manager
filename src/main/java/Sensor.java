@@ -16,7 +16,7 @@ abstract class Sensor {
         return currentValue;
     }
 
-    public TreeMap<Instant, Float> getLastValues() {
+    TreeMap<Instant, Float> getLastValues() {
         return lastValues;
     }
 

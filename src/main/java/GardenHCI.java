@@ -67,7 +67,7 @@ class GardenHCI extends JFrame {
     private void initCameras() {
         int index = 0;
 
-        for (Floor floor : garden.getAllFloors()) {
+        for (Floor floor : garden.getFloors()) {
             Webcam floorCamera = floor.getCamera();
 
             if (floorCamera != null) {
@@ -90,7 +90,7 @@ class GardenHCI extends JFrame {
     }
 
     private void initFloorsSensors() {
-        for (Floor floor : garden.getAllFloors()) {
+        for (Floor floor : garden.getFloors()) {
             floorSensorLabels.add(new FloorSensorLabel(floor.getFloorId(), floor.getAciditySensor(), "g/L"));
             floorSensorLabels.add(new FloorSensorLabel(floor.getFloorId(), floor.getBrightnessSensor(), "cd/m²"));
             floorSensorLabels.add(new FloorSensorLabel(floor.getFloorId(), floor.getWaterSensor(), "%"));
@@ -174,13 +174,11 @@ class GardenHCI extends JFrame {
                 actionTitleLabel.setText("Arrosage de tous les étages en cours");
                 actionSubTitleLabel.setText("Pourcentage d'eau :\n");
                 sensorClass = WaterSensor.class;
-                garden.getAllFloors().forEach(Floor::startWater);
                 break;
             case LIGHTING:
                 actionTitleLabel.setText("Éclairage de tous les étages en cours");
                 actionSubTitleLabel.setText("Taux de luminosité :\n");
                 sensorClass = BrightnessSensor.class;
-                garden.getAllFloors().forEach(Floor::turnOnLight);
                 break;
         }
 
@@ -231,13 +229,11 @@ class GardenHCI extends JFrame {
                 actionTitleLabel.setText("Arrosage du " + floorName + " étage");
                 actionSubTitleLabel.setText("Pourcentage d'eau :\n");
                 sensorClass = WaterSensor.class;
-                garden.getFloor(floorId).startWater();
                 break;
             case LIGHTING:
                 actionTitleLabel.setText("Éclairage du " + floorName + " étage");
                 actionSubTitleLabel.setText("Taux de luminosité :\n");
                 sensorClass = BrightnessSensor.class;
-                garden.getFloor(floorId).turnOnLight();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + actionType);
@@ -338,18 +334,7 @@ class GardenHCI extends JFrame {
                 .forEach(FloorSensorLabel::refreshLabel);
     }
 
-    void stopAction(ActionType actionType) {// TODO: stopWatering -> arreter quel étage ...
-        switch (actionType) {
-            case WATERING:
-                garden.getAllFloors()
-                        .forEach(Floor::stopWater);
-                break;
-            case LIGHTING:
-                garden.getAllFloors()
-                        .forEach(Floor::turnOffLight);
-                break;
-        }
+    void stopAction() {
         displayWelcome();
     }
-
 }

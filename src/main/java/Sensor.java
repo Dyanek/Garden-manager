@@ -16,6 +16,10 @@ abstract class Sensor {
         return currentValue;
     }
 
+    public TreeMap<Instant, Float> getLastValues() {
+        return lastValues;
+    }
+
     float getAverage() {
         AtomicReference<Float> sum = new AtomicReference<>((float) 0);
 

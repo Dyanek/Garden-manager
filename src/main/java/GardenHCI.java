@@ -265,8 +265,31 @@ class GardenHCI extends JFrame {
     }
 
     public void displayFloorPanel(int floorId) {
-        //TODO
-        System.out.println("TO DO : displayFloorPanel " + floorId);
+        mainPanel.removeAll();
+        informationPanel.removeAll();
+        mainPanel.setLayout(new GridLayout(0, 2));
+        informationPanel.setLayout(new GridLayout(4, 0));
+
+        JLabel titleLabel = new JLabel();
+        if (floorId == 1)
+            titleLabel.setText("premier étage");
+        else if (floorId == 2)
+            titleLabel.setText("deuxième étage");
+        else
+            titleLabel.setText("troisième étage");
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        JLabel acidityJLabel = new JLabel("acitité : " + garden.getFloor(floorId).getAciditySensor().getCurrentValue());
+        JLabel brightnessJLabel = new JLabel("luminocité : " + garden.getFloor(floorId).getBrightnessSensor().getCurrentValue());
+        JLabel waterJLabel = new JLabel("acitité : " + garden.getFloor(floorId).getWaterSensor().getCurrentValue());
+
+        informationPanel.add(titleLabel);
+        informationPanel.add(acidityJLabel);
+        informationPanel.add(brightnessJLabel);
+        informationPanel.add(waterJLabel);
+        mainPanel.add(cameraPanels[floorId - 1]);
+        mainPanel.add(informationPanel);
+
+
     }
 
     private static XYDataset createDataset(TreeMap<Instant, Float> lastValues, String titleChart) {

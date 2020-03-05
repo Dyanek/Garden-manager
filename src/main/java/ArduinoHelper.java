@@ -41,7 +41,7 @@ class ArduinoHelper {
         return valueOf(res.toString());
     }
 
-    void GetMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
+    void getMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
         try {
             while (true) {
                 while (serialPort.bytesAvailable() == 0) {
@@ -50,29 +50,45 @@ class ArduinoHelper {
 
                 Scanner data = new Scanner(serialPort.getInputStream());
 
-                int i = 0;
                 while (data.hasNext()) {
                     String str = data.nextLine();
                     System.out.println(str);
 
-                    if (str.contains("Light")) {
+                    if (str.contains("PHThree")) {
+                        float ph = getValue(str) / 100;
+
+                        garden.getFloor(3).getAciditySensor().addValue(ph);
+                    }
+
+                    if (str.contains("LightOne")) {
                         int light = getValue(str);
 
                         garden.getFloor(1).getBrightnessSensor().addValue((float) light);
                         gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
                     }
 
-                    if (str.contains("PH")) {
-                        float tmp = getValue(str);
-                        float ph = tmp / 100;
+                    if (str.contains("WaterOne")) {
+                        float water = getValue(str) / 100;
 
-                        garden.getFloor(2).getAciditySensor().addValue(ph);
+                        garden.getFloor(1).getWaterSensor().addValue(water);
                     }
 
-                    if (str.contains("temperature")) {
+                    if (str.contains("WaterTwo")) {
+                        float water = getValue(str) / 100;
+
+                        garden.getFloor(2).getWaterSensor().addValue(water);
+                    }
+
+                    if (str.contains("Temperature")) {
                         float temperature = getValue(str);
                         garden.getFloor(2).getAciditySensor().addValue(temperature);
                         gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
+                    }
+
+                    if (str.contains("Humidity")) {
+                        float humidity = getValue(str);
+
+                        garden.getHumiditySensor().addValue(humidity);
                     }
                 }
             }

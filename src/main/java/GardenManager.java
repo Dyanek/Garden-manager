@@ -37,7 +37,7 @@ public class GardenManager implements MqttCallback {
         this.gardenHCI = new GardenHCI(garden);
 
         this.arduinoHelper = new ArduinoHelper();
-        arduinoHelper.GetMessageFromArduino(garden, gardenHCI);
+        arduinoHelper.getMessageFromArduino(garden, gardenHCI);
 
         gardenHCI.launchHCI();
     }
@@ -82,36 +82,35 @@ public class GardenManager implements MqttCallback {
     private void processCommand(String command) {
         String[] words = command.split(" ");
 
-        int floorId = -1;
+        int floorId;
 
         if (words.length == 2) {
             String firstWord = words[0].toLowerCase();
             switch (firstWord) {
-                case "temperature":
+                case "temperature"://TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getTemperatureSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
                     break;
-                case "humidite":
+                case "humidite"://TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getHumiditySensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshGardenSensorLabel(HumiditySensor.class);
                     break;
-                case "watersensorvaluefloor1":
+                case "watersensorvaluefloor1": //TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getFloor(1).getWaterSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 1);
                     break;
-                case "watersensorvaluefloor2":
+                case "watersensorvaluefloor2": //TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getFloor(2).getWaterSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 2);
                     break;
-                case "watersensorvaluefloor3":
+                case "watersensorvaluefloor3": //TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getFloor(3).getWaterSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 3);
                 case "arroser":
                     if (words[1].toLowerCase().equals("tout")) {
                         arduinoHelper.SendMessageToArduino("a".getBytes());
                         gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.WATERING);
-                    }
-                    else {
+                    } else {
                         floorId = Integer.parseInt(words[1]);
                         gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, floorId);
                     }
@@ -120,22 +119,51 @@ public class GardenManager implements MqttCallback {
                     if (words[1].toLowerCase().equals("tout")) {
                         arduinoHelper.SendMessageToArduino("e".getBytes());
                         gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.LIGHTING);
-                    }
-                    else {
+                    } else {
                         floorId = Integer.parseInt(words[1]);
                         gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, floorId);
                     }
+                    break;
+                case "afficher":
+                    floorId = Integer.parseInt(words[1]);
+                    gardenHCI.displayFloorPanel(floorId);
+                    break;
                 case "arreter":
-                    if (words[1].toLowerCase().equals("arrosage"))
+                    if (words[1].toLowerCase().equals("arrosage")) // TODO : arroser quel étage ...
                         arduinoHelper.SendMessageToArduino("s".getBytes());
-                    else if (words[1].toLowerCase().equals("eclairage"))
+                    else if (words[1].toLowerCase().equals("éclairage"))
                         arduinoHelper.SendMessageToArduino("t".getBytes());
                     gardenHCI.stopAction();
                     break;
+                case "historique":
+                    if (words[1].equals("humidité"))
+                        gardenHCI.displayChart(HumiditySensor.class, -1);
+                    else if (words[1].equals("température"))
+                        gardenHCI.displayChart(TemperatureSensor.class, -1);
+                    break;
                 default:
-                    System.out.println("C'est vraiment trop difficile de comprendre votre commande -> " + command);
+                    printUnknownCommand(command);
                     break;
             }
+        } else if (words.length == 3) {
+            floorId = Integer.parseInt(words[2]);
+            if ("historique".equals(words[0].toLowerCase())) {
+                switch (words[1]) {
+                    case "luminosité":
+                        gardenHCI.displayChart(BrightnessSensor.class, floorId);
+                        break;
+                    case "acidité":
+                        gardenHCI.displayChart(AciditySensor.class, floorId);
+                        break;
+                    case "eau":
+                        gardenHCI.displayChart(WaterSensor.class, floorId);
+                        break;
+                    default:
+                        printUnknownCommand(command);
+                        break;
+                }
+            } else
+                printUnknownCommand(command);
         } else if (words.length == 1) {
             switch (words[0].toLowerCase()) {
                 case "aide":
@@ -144,18 +172,19 @@ public class GardenManager implements MqttCallback {
                 case "accueil":
                     gardenHCI.displayWelcome();
                     break;
-                case "afficher":
-                    gardenHCI.displayChart(TemperatureSensor.class, 0);
-                    break;
-                case "test": // Code pour tester Interface sans Arduino
+                case "test": // TODO : a suprrimer (pour tester Interface sans Arduino)
                     garden.getTemperatureSensor().getLastValues().put(Instant.now(), 5.5f);
                     gardenHCI.displayChart(TemperatureSensor.class, 0);
                     break;
                 default:
-                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + command);
+                    printUnknownCommand(command);
                     break;
             }
         } else
-            System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + command);
+            printUnknownCommand(command);
+    }
+
+    private void printUnknownCommand(String command) {
+        System.out.println("C'est vraiment trop difficile de comprendre votre commande -> " + command);
     }
 }

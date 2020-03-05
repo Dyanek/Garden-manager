@@ -19,7 +19,7 @@ public class GardenManager {
         this.gardenHCI = new GardenHCI(garden);
 
         this.arduinoHelper = new ArduinoHelper();
-        arduinoHelper.GetMessageFromArduino(garden, gardenHCI);
+        arduinoHelper.getMessageFromArduino(garden, gardenHCI);
 
         gardenHCI.launchHCI();
         getCommand();
@@ -54,15 +54,15 @@ public class GardenManager {
                     garden.getHumiditySensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshGardenSensorLabel(HumiditySensor.class);
                     break;
-                case "watersensorvaluefloor1":
+                case "watersensorvaluefloor1": //TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getFloor(1).getWaterSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 1);
                     break;
-                case "watersensorvaluefloor2":
+                case "watersensorvaluefloor2": //TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getFloor(2).getWaterSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 2);
                     break;
-                case "watersensorvaluefloor3":
+                case "watersensorvaluefloor3": //TODO : a supprimer à la fin, cela est sert à test sans arduino
                     garden.getFloor(3).getWaterSensor().addValue(Float.valueOf(words[1]));
                     gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 3);
                 case "arroser":
@@ -86,7 +86,7 @@ public class GardenManager {
                     gardenHCI.displayFloorPanel(floorId);
                     break;
                 case "arreter":
-                    if (words[1].toLowerCase().equals("arrosage")) // TO DO : arroser quel étage ...
+                    if (words[1].toLowerCase().equals("arrosage")) // TODO : arroser quel étage ...
                         gardenHCI.stopAction(GardenHCI.ActionType.WATERING);
                     else if (words[1].toLowerCase().equals("éclairage"))
                         gardenHCI.stopAction(GardenHCI.ActionType.LIGHTING);

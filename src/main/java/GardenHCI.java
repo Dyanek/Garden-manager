@@ -272,15 +272,16 @@ class GardenHCI extends JFrame {
 
         JLabel titleLabel = new JLabel();
         if (floorId == 1)
-            titleLabel.setText("premier étage");
+            titleLabel.setText("  Premier étage");
         else if (floorId == 2)
-            titleLabel.setText("deuxième étage");
+            titleLabel.setText("  Deuxième étage");
         else
-            titleLabel.setText("troisième étage");
+            titleLabel.setText("  Troisième étage");
+
         titleLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        JLabel acidityJLabel = new JLabel("acitité : " + garden.getFloor(floorId).getAciditySensor().getCurrentValue());
-        JLabel brightnessJLabel = new JLabel("luminocité : " + garden.getFloor(floorId).getBrightnessSensor().getCurrentValue());
-        JLabel waterJLabel = new JLabel("acitité : " + garden.getFloor(floorId).getWaterSensor().getCurrentValue());
+        JLabel acidityJLabel = new JLabel("    Acitité : " + garden.getFloor(floorId).getAciditySensor().getCurrentValue());
+        JLabel brightnessJLabel = new JLabel("    Luminosité : " + garden.getFloor(floorId).getBrightnessSensor().getCurrentValue());
+        JLabel waterJLabel = new JLabel("    Eau : " + garden.getFloor(floorId).getWaterSensor().getCurrentValue());
 
         informationPanel.add(titleLabel);
         informationPanel.add(acidityJLabel);
@@ -291,8 +292,6 @@ class GardenHCI extends JFrame {
 
         this.mainPanel.repaint();
         this.jFrame.validate();
-
-
     }
 
     private static XYDataset createDataset(TreeMap<Instant, Float> lastValues, String titleChart) {

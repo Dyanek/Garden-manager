@@ -42,7 +42,7 @@ class ArduinoHelper {
         return valueOf(res.toString());
     }
 
-    void GetMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
+    void getMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
         try {
             while (true) {
                 while (serialPort.bytesAvailable() == 0) {

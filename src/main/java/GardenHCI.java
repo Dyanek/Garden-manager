@@ -304,9 +304,14 @@ class GardenHCI extends JFrame {
         return ds;
     }
 
-    void displayChart(Class sensorType, int floorId) {
+    void displayChart(final Class sensorType) {
+        displayChart(sensorType, -1);
+    }
+
+    void displayChart(final Class sensorType, final int floorId) {
         Sensor sensor;
         String chartTitle;
+
         if (sensorType.equals(TemperatureSensor.class)) {
             sensor = garden.getTemperatureSensor();
             chartTitle = "Capteur de température";

@@ -11,37 +11,47 @@ public class GardenManager implements MqttCallback {
     private static final String SERVER_URI = "tcp://127.0.0.1";
     private static final String TOPIC_NAME = "speech";
 
+
     private GardenHCI gardenHCI;
     private User user;
+    private Garden garden;
     private Arduino arduino;
+
 
     private HashMap<String, Action> actions;
 
     public static void main(String[] args) {
         MqttClient client;
 
+        GardenManager gardenManager = new GardenManager();
+
         try {
             client = new MqttClient(SERVER_URI, MqttClient.generateClientId());
-            client.setCallback(new GardenManager());
+            client.setCallback(gardenManager);
             client.connect();
             client.subscribe(TOPIC_NAME);
         } catch (MqttException mqttException) {
             Logger.getLogger(GardenManager.class.getName()).log(Level.SEVERE, null, mqttException);
         }
+
+        gardenManager.runArduinoListener();
     }
 
     private GardenManager() {
         this.user = new User("Lorca");
 
-        Garden garden = initGarden();
+        this.garden = initGarden();
         this.gardenHCI = new GardenHCI(garden, user);
-
         this.arduino = new Arduino();
-        arduino.getMessageFromArduino(garden, gardenHCI);
+
 
         gardenHCI.launchHCI();
 
         initActions();
+    }
+
+    private void runArduinoListener() {
+        arduino.getMessageFromArduino(garden, gardenHCI);
     }
 
     private static Garden initGarden() {
@@ -65,7 +75,7 @@ public class GardenManager implements MqttCallback {
         actions.put("aide", () -> gardenHCI.displayHelp());
 
         actions.put("allumer tout", () -> {
-            arduino.SendMessageToArduino("e".getBytes());
+            arduino.SendMessageToArduino("j".getBytes());
             gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.LIGHTING);
             user.increaseExecutedLightingsCount();
         });

@@ -12,6 +12,7 @@ public class GardenManager implements MqttCallback {
     private static final String TOPIC_NAME = "speech";
 
     private GardenHCI gardenHCI;
+    private User user;
     private Arduino arduino;
 
     private HashMap<String, Action> actions;
@@ -30,8 +31,10 @@ public class GardenManager implements MqttCallback {
     }
 
     private GardenManager() {
+        this.user = new User("Lorca");
+
         Garden garden = initGarden();
-        this.gardenHCI = new GardenHCI(garden);
+        this.gardenHCI = new GardenHCI(garden, user);
 
         this.arduino = new Arduino();
         arduino.getMessageFromArduino(garden, gardenHCI);
@@ -64,21 +67,27 @@ public class GardenManager implements MqttCallback {
         actions.put("allumer tout", () -> {
             arduino.SendMessageToArduino("e".getBytes());
             gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.LIGHTING);
+            user.increaseExecutedLightingsCount();
         });
         actions.put("arreter eclairage", () -> {
             arduino.SendMessageToArduino("t".getBytes());
             gardenHCI.stopAction();
+            user.increaseExecutedCommandsCount();
         });
 
 
         actions.put("arroser tout", () -> {
             arduino.SendMessageToArduino("e".getBytes());
             gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.WATERING);
+            user.increaseExecutedWateringsCount();
         });
         actions.put("arreter arrosage", () -> {
             arduino.SendMessageToArduino("s".getBytes());
             gardenHCI.stopAction();
+            user.increaseExecutedCommandsCount();
         });
+
+        actions.put("afficher statistiques", () -> gardenHCI.displayStats());
 
         actions.put("historique humidite", () -> gardenHCI.displayChart(HumiditySensor.class));
         actions.put("historique temperature", () -> gardenHCI.displayChart(TemperatureSensor.class));
@@ -88,19 +97,28 @@ public class GardenManager implements MqttCallback {
 
             actions.put("afficher " + finalI, () -> gardenHCI.displayFloorPanel(finalI));
 
-            actions.put("allumer " + finalI, () -> gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, finalI));
-            actions.put("arroser " + finalI, () -> gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, finalI));
+            actions.put("allumer " + finalI, () -> {
+                gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, finalI);
+                user.increaseExecutedLightingsCount();
+            });
+            actions.put("arroser " + finalI, () -> {
+                gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, finalI);
+                user.increaseExecutedWateringsCount();
+            });
 
             actions.put("historique acidite " + finalI, () -> gardenHCI.displayChart(AciditySensor.class, finalI));
             actions.put("historique luminosite " + finalI, () -> gardenHCI.displayChart(BrightnessSensor.class, finalI));
             actions.put("historique eau " + finalI, () -> gardenHCI.displayChart(WaterSensor.class, finalI));
         }
+
     }
 
     @Override
     public void connectionLost(Throwable cause) {
         System.out.println("-------------------------------------------------");
         System.out.println("Connection lost");
+        System.out.println("Reason :");
+        System.out.println(cause.getMessage());
         System.out.println("-------------------------------------------------");
     }
 

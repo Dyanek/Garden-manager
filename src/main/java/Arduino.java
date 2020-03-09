@@ -10,7 +10,7 @@ class Arduino {
     private SerialPort serialPort;
 
     Arduino() {
-        serialPort = SerialPort.getCommPort("/dev/cu.usbmodem14101");
+        serialPort = SerialPort.getCommPort("/dev/ttyACM0");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 3527, 3527);
 

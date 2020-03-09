@@ -5,19 +5,18 @@ import java.util.Scanner;
 
 import static java.lang.Short.valueOf;
 
-class ArduinoHelper {
+class Arduino {
 
     private SerialPort serialPort;
 
-    ArduinoHelper() {
-        serialPort = SerialPort.getCommPort("/dev/cu.usbmodem14101");
+    Arduino() {
+        serialPort = SerialPort.getCommPort("/dev/ttyACM0");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 3527, 3527);
 
         try {
             serialPort.openPort();
             System.out.println("Port is open");
-
         } catch (Exception ex) {
             System.out.println("Failed to open port: " + ex);
         }
@@ -32,7 +31,7 @@ class ArduinoHelper {
         }
     }
 
-    public static int getValue(String str) {
+    private static int getValue(String str) {
         StringBuilder res = new StringBuilder();
         for (int j = 0; j < str.length(); j++) {
             if (str.charAt(j) >= 48 && str.charAt(j) <= 57) {
@@ -51,29 +50,40 @@ class ArduinoHelper {
 
                 Scanner data = new Scanner(serialPort.getInputStream());
 
-                int i = 0;
                 while (data.hasNext()) {
                     String str = data.nextLine();
                     System.out.println(str);
 
-                    if (str.contains("Light")) {
-                        int light = getValue(str);
+                    if (str.contains("PHThree")) {
+                        float ph = getValue(str) / 100;
+                        garden.getFloor(3).getAciditySensor().addValue(ph);
+                    }
 
+                    if (str.contains("LightOne")) {
+                        int light = getValue(str);
                         garden.getFloor(1).getBrightnessSensor().addValue((float) light);
                         gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
                     }
 
-                    if (str.contains("PH")) {
-                        float tmp = getValue(str);
-                        float ph = tmp / 100;
-
-                        garden.getFloor(2).getAciditySensor().addValue(ph);
+                    if (str.contains("WaterOne")) {
+                        float water = getValue(str) / 100;
+                        garden.getFloor(1).getWaterSensor().addValue(water);
                     }
 
-                    if (str.contains("temperature")) {
+                    if (str.contains("WaterTwo")) {
+                        float water = getValue(str) / 100;
+                        garden.getFloor(2).getWaterSensor().addValue(water);
+                    }
+
+                    if (str.contains("Temperature")) {
                         float temperature = getValue(str);
                         garden.getFloor(2).getAciditySensor().addValue(temperature);
                         gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
+                    }
+
+                    if (str.contains("Humidity")) {
+                        float humidity = getValue(str);
+                        garden.getHumiditySensor().addValue(humidity);
                     }
                 }
             }

@@ -21,17 +21,17 @@ class User {
         return executedLightingsCount;
     }
 
-    void increaseExecutedCommqndsCount() {
+    void increaseExecutedCommandsCount() {
         executedCommandsCount++;
     }
 
     void increaseExecutedWateringsCount() {
-        increaseExecutedCommqndsCount();
+        increaseExecutedCommandsCount();
         executedWateringsCount++;
     }
 
     void increaseExecutedLightingsCount() {
-        increaseExecutedCommqndsCount();
+        increaseExecutedCommandsCount();
         executedLightingsCount++;
     }
 

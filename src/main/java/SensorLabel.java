@@ -26,6 +26,6 @@ abstract class SensorLabel {
     }
 
     void refreshLabel() throws Exception {
-        throw new Exception("Shouln't call this method!");
+        throw new Exception("This method shouldn't be called.");
     }
 }

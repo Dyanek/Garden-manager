@@ -1,7 +1,8 @@
 class FloorSensorLabel extends SensorLabel {
+
     private int floorId;
 
-    public int getFloorId() {
+    int getFloorId() {
         return floorId;
     }
 

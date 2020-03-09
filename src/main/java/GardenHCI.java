@@ -12,12 +12,14 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
 class GardenHCI extends JFrame {
 
     private Garden garden;
+    private User user;
 
     private JFrame jFrame;
     private JPanel mainPanel, informationPanel;
@@ -32,8 +34,9 @@ class GardenHCI extends JFrame {
         LIGHTING
     }
 
-    GardenHCI(Garden garden) {
+    GardenHCI(Garden garden, User user) {
         this.garden = garden;
+        this.user = user;
     }
 
     void launchHCI() {
@@ -67,7 +70,7 @@ class GardenHCI extends JFrame {
     private void initCameras() {
         int index = 0;
 
-        for (Floor floor : garden.getAllFloors()) {
+        for (Floor floor : garden.getFloors()) {
             Webcam floorCamera = floor.getCamera();
 
             if (floorCamera != null) {
@@ -90,7 +93,7 @@ class GardenHCI extends JFrame {
     }
 
     private void initFloorsSensors() {
-        for (Floor floor : garden.getAllFloors()) {
+        for (Floor floor : garden.getFloors()) {
             floorSensorLabels.add(new FloorSensorLabel(floor.getFloorId(), floor.getAciditySensor(), "g/L"));
             floorSensorLabels.add(new FloorSensorLabel(floor.getFloorId(), floor.getBrightnessSensor(), "cd/m²"));
             floorSensorLabels.add(new FloorSensorLabel(floor.getFloorId(), floor.getWaterSensor(), "%"));
@@ -123,30 +126,37 @@ class GardenHCI extends JFrame {
     }
 
     void displayHelp() {
+        JLabel title = new JLabel("------ Aide ------", SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 20));
+        JLabel help1 = new JLabel("<html><body>1. \"accueil\"<br/>Pour retourner à la page d'accueil.</body></html>");
+        help1.setFont(new Font("Serif", Font.BOLD, 15));
+        JLabel help2 = new JLabel("<html><body>2. \"arroser\" [tout/1/2/3]<br/>Pour arroser un ou tous les étages.</body></html>");
+        help2.setFont(new Font("Serif", Font.BOLD, 15));
+        JLabel help3 = new JLabel("<html><body>3. \"arreter arrosage\"<br/>Pour arreter arrosage.</body></html>");
+        help3.setFont(new Font("Serif", Font.BOLD, 15));
+
+        displayTextPanel(Arrays.asList(title, help1, help2, help3));
+    }
+
+    void displayStats() {
+        JLabel title = new JLabel("Statistiques pour l'utilisateur : " + user.getUserName(), SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 20));
+        JLabel executedCommands = new JLabel("<html><body>Nombre de commandes exécutées : " + user.getExecutedCommandsCount() + "</body></html>");
+        executedCommands.setFont(new Font("Serif", Font.BOLD, 15));
+        JLabel executedlightings = new JLabel("<html><body>Nombre d'éclairages exécutés : " + user.getExecutedLightingsCount() + "</body></html>");
+        executedlightings.setFont(new Font("Serif", Font.BOLD, 15));
+        JLabel executedCWaterings = new JLabel("<html><body>Nombre d'arrosages exécutés : " + user.getExecutedWateringsCount() + "</body></html>");
+        executedCWaterings.setFont(new Font("Serif", Font.BOLD, 15));
+
+        displayTextPanel(Arrays.asList(title, executedCommands, executedlightings, executedCWaterings));
+    }
+
+    private void displayTextPanel(List<JLabel> jLabels) {
         mainPanel.removeAll();
 
-        JLabel jLabelHelpTitle = new JLabel("------ Aide ------", SwingConstants.CENTER);
-        jLabelHelpTitle.setFont(new Font("Serif", Font.BOLD, 20));
-        JLabel jLabelHelp1 = new JLabel("<html><body>1. \"accueil\"<br/>Pour retourner à la page d'accueil.</body></html>");
-        jLabelHelp1.setFont(new Font("Serif", Font.BOLD, 15));
-        JLabel jLabelHelp2 = new JLabel("<html><body>2. \"arroser\" [tout/1/2/3]<br/>Pour arroser un ou tous les étages.</body></html>");
-        jLabelHelp2.setFont(new Font("Serif", Font.BOLD, 15));
-        JLabel jLabelHelp3 = new JLabel("<html><body>3. \"arreter arrosage\"<br/>Pour arreter arrosage.</body></html>");
-        jLabelHelp3.setFont(new Font("Serif", Font.BOLD, 15));
-        JLabel jLabelHelp4 = new JLabel("<html><body>4. \"temperature/watersensorvaluefloor1(2/3)/ph/humidite\" [chiffre]<br/>Pour mettre à jour la valeur correspondante (pour developper).</body></html>");//TODO: (pour developper), a supprimer
-        jLabelHelp4.setFont(new Font("Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
-        JLabel jLabelHelp5 = new JLabel("<html><body>5. \"exit\" [chiffre]<br/>Pour quitter.</body></html>");//TODO: (pour developper), a supprimer
-        jLabelHelp5.setFont(new Font("Serif", Font.BOLD, 15));//TODO: (pour developper), a supprimer
+        jLabels.forEach(jLabel -> mainPanel.add(jLabel));
 
-        mainPanel.add(jLabelHelpTitle);
-        mainPanel.add(jLabelHelp1);
-        mainPanel.add(jLabelHelp2);
-        mainPanel.add(jLabelHelp3);
-
-        mainPanel.add(jLabelHelp4); // TODO: (pour developper), a supprimer
-        mainPanel.add(jLabelHelp5); // TODO: (pour developper), a supprimer
-
-        mainPanel.setLayout(new GridLayout(6, 0));
+        mainPanel.setLayout(new GridLayout(jLabels.size(), 0));
 
         mainPanel.repaint();
         jFrame.validate();
@@ -174,13 +184,11 @@ class GardenHCI extends JFrame {
                 actionTitleLabel.setText("Arrosage de tous les étages en cours");
                 actionSubTitleLabel.setText("Pourcentage d'eau :\n");
                 sensorClass = WaterSensor.class;
-                garden.getAllFloors().forEach(Floor::startWater);
                 break;
             case LIGHTING:
                 actionTitleLabel.setText("Éclairage de tous les étages en cours");
                 actionSubTitleLabel.setText("Taux de luminosité :\n");
                 sensorClass = BrightnessSensor.class;
-                garden.getAllFloors().forEach(Floor::turnOnLight);
                 break;
         }
 
@@ -214,7 +222,7 @@ class GardenHCI extends JFrame {
         JLabel actionSubTitleLabel = new JLabel();
         JLabel sensorLabel;
 
-        Class sensorClass = null;
+        Class sensorClass;
         String floorName;
 
         if (floorId == 1)
@@ -231,13 +239,11 @@ class GardenHCI extends JFrame {
                 actionTitleLabel.setText("Arrosage du " + floorName + " étage");
                 actionSubTitleLabel.setText("Pourcentage d'eau :\n");
                 sensorClass = WaterSensor.class;
-                garden.getFloor(floorId).startWater();
                 break;
             case LIGHTING:
                 actionTitleLabel.setText("Éclairage du " + floorName + " étage");
                 actionSubTitleLabel.setText("Taux de luminosité :\n");
                 sensorClass = BrightnessSensor.class;
-                garden.getFloor(floorId).turnOnLight();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + actionType);
@@ -264,7 +270,7 @@ class GardenHCI extends JFrame {
         this.jFrame.validate();
     }
 
-    public void displayFloorPanel(int floorId) {
+    void displayFloorPanel(int floorId) {
         mainPanel.removeAll();
         informationPanel.removeAll();
         mainPanel.setLayout(new GridLayout(0, 2));
@@ -308,9 +314,14 @@ class GardenHCI extends JFrame {
         return ds;
     }
 
-    void displayChart(Class sensorType, int floorId) {
+    void displayChart(final Class sensorType) {
+        displayChart(sensorType, -1);
+    }
+
+    void displayChart(final Class sensorType, final int floorId) {
         Sensor sensor;
         String chartTitle;
+
         if (sensorType.equals(TemperatureSensor.class)) {
             sensor = garden.getTemperatureSensor();
             chartTitle = "Capteur de température";
@@ -368,18 +379,7 @@ class GardenHCI extends JFrame {
                 .forEach(FloorSensorLabel::refreshLabel);
     }
 
-    void stopAction(ActionType actionType) {// TODO: stopWatering -> arreter quel étage ...
-        switch (actionType) {
-            case WATERING:
-                garden.getAllFloors()
-                        .forEach(Floor::stopWater);
-                break;
-            case LIGHTING:
-                garden.getAllFloors()
-                        .forEach(Floor::turnOffLight);
-                break;
-        }
+    void stopAction() {
         displayWelcome();
     }
-
 }

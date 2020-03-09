@@ -1,142 +1,57 @@
 import com.github.sarxos.webcam.Webcam;
+import org.eclipse.paho.client.mqttv3.*;
 
-import java.time.Instant;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-public class GardenManager {
-    private Garden garden;
+public class GardenManager implements MqttCallback {
+
+    private static final String SERVER_URI = "tcp://127.0.0.1";
+    private static final String TOPIC_NAME = "speech";
+
+
     private GardenHCI gardenHCI;
-    private ArduinoHelper arduinoHelper;
+    private User user;
+    private Garden garden;
+    private Arduino arduino;
 
+
+    private HashMap<String, Action> actions;
 
     public static void main(String[] args) {
+        MqttClient client;
+
         GardenManager gardenManager = new GardenManager();
 
+        try {
+            client = new MqttClient(SERVER_URI, MqttClient.generateClientId());
+            client.setCallback(gardenManager);
+            client.connect();
+            client.subscribe(TOPIC_NAME);
+        } catch (MqttException mqttException) {
+            Logger.getLogger(GardenManager.class.getName()).log(Level.SEVERE, null, mqttException);
+        }
+
+        gardenManager.runArduinoListener();
     }
 
     private GardenManager() {
-        this.garden = initGarden();
-        this.gardenHCI = new GardenHCI(garden);
+        this.user = new User("Lorca");
 
-        this.arduinoHelper = new ArduinoHelper();
-        arduinoHelper.getMessageFromArduino(garden, gardenHCI);
+        this.garden = initGarden();
+        this.gardenHCI = new GardenHCI(garden, user);
+        this.arduino = new Arduino();
+
 
         gardenHCI.launchHCI();
-        getCommand();
+
+        initActions();
     }
 
-    // -- TEST a l'aide console --
-    private void getCommand() {
-        Scanner scanner = new Scanner(System.in);
-        String input = "";
-        while (!input.equals("exit")) {
-            System.out.print("Dis-moi, qu'est-ce que tu veux hen ???(\"help\" if u need help O.O) : ");
-            input = scanner.nextLine();
-            processCommand(input);
-        }
-        System.out.println("Bye, à plus ^^");
-        System.exit(0);
-    }
-
-    private void processCommand(String c) {
-        String[] words = c.split(" ");
-
-        int floorId = -1;
-
-        if (words.length == 2) {
-            String firstWord = words[0].toLowerCase();
-            switch (firstWord) {
-                case "temperature"://TODO : a supprimer à la fin, cela est sert à test sans arduino
-                    garden.getTemperatureSensor().addValue(Float.valueOf(words[1]));
-                    gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
-                    break;
-                case "humidite"://TODO : a supprimer à la fin, cela est sert à test sans arduino
-                    garden.getHumiditySensor().addValue(Float.valueOf(words[1]));
-                    gardenHCI.refreshGardenSensorLabel(HumiditySensor.class);
-                    break;
-                case "watersensorvaluefloor1": //TODO : a supprimer à la fin, cela est sert à test sans arduino
-                    garden.getFloor(1).getWaterSensor().addValue(Float.valueOf(words[1]));
-                    gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 1);
-                    break;
-                case "watersensorvaluefloor2": //TODO : a supprimer à la fin, cela est sert à test sans arduino
-                    garden.getFloor(2).getWaterSensor().addValue(Float.valueOf(words[1]));
-                    gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 2);
-                    break;
-                case "watersensorvaluefloor3": //TODO : a supprimer à la fin, cela est sert à test sans arduino
-                    garden.getFloor(3).getWaterSensor().addValue(Float.valueOf(words[1]));
-                    gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 3);
-                case "arroser":
-                    if (words[1].toLowerCase().equals("tout"))
-                        gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.WATERING);
-                    else {
-                        floorId = Integer.parseInt(words[1]);
-                        gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, floorId);
-                    }
-                    break;
-                case "allumer":
-                    if (words[1].toLowerCase().equals("tout"))
-                        gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.LIGHTING);
-                    else {
-                        floorId = Integer.parseInt(words[1]);
-                        gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, floorId);
-                    }
-                    break;
-                case "afficher":
-                    floorId = Integer.parseInt(words[1]);
-                    gardenHCI.displayFloorPanel(floorId);
-                    break;
-                case "arreter":
-                    if (words[1].toLowerCase().equals("arrosage")) // TODO : arroser quel étage ...
-                        gardenHCI.stopAction(GardenHCI.ActionType.WATERING);
-                    else if (words[1].toLowerCase().equals("éclairage"))
-                        gardenHCI.stopAction(GardenHCI.ActionType.LIGHTING);
-                    break;
-                case "historique":
-                    if (words[1].equals("humidité"))
-                        gardenHCI.displayChart(HumiditySensor.class, -1);
-                    else if (words[1].equals("température"))
-                        gardenHCI.displayChart(TemperatureSensor.class, -1);
-                    break;
-                default:
-                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-                    break;
-            }
-        } else if (words.length == 3) {
-            floorId = Integer.parseInt(words[2]);
-            switch (words[0].toLowerCase()) {
-                case "historique":
-                    if (words[1].equals("luminosité"))
-                        gardenHCI.displayChart(BrightnessSensor.class, floorId);
-                    else if (words[1].equals("acidité"))
-                        gardenHCI.displayChart(AciditySensor.class, floorId);
-                    else if (words[1].equals("eau"))
-                        gardenHCI.displayChart(WaterSensor.class, floorId);
-                    else {
-                        System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-                    }
-                    break;
-                default:
-                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-                    break;
-            }
-        } else if (words.length == 1) {
-            switch (words[0].toLowerCase()) {
-                case "aide":
-                    gardenHCI.displayHelp();
-                    break;
-                case "accueil":
-                    gardenHCI.displayWelcome();
-                    break;
-                case "test": // TODO : a suprrimer (pour tester Interface sans Arduino)
-                    garden.getTemperatureSensor().getLastValues().put(Instant.now(), 5.5f);
-                    gardenHCI.displayChart(TemperatureSensor.class, 0);
-                    break;
-                default:
-                    System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
-                    break;
-            }
-        } else
-            System.out.println("C'est vraiment trop difficile à comprendre votre commande -> " + c);
+    private void runArduinoListener() {
+        arduino.getMessageFromArduino(garden, gardenHCI);
     }
 
     private static Garden initGarden() {
@@ -151,5 +66,96 @@ public class GardenManager {
         Set<Floor> allFloors = new HashSet<>(floors);
 
         return new Garden(allFloors);
+    }
+
+    private void initActions() {
+        actions = new HashMap<>();
+
+        actions.put("accueil", () -> gardenHCI.displayWelcome());
+        actions.put("aide", () -> gardenHCI.displayHelp());
+
+        actions.put("allumer tout", () -> {
+            arduino.SendMessageToArduino("j".getBytes());
+            gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.LIGHTING);
+            user.increaseExecutedLightingsCount();
+        });
+        actions.put("arreter eclairage", () -> {
+            arduino.SendMessageToArduino("t".getBytes());
+            gardenHCI.stopAction();
+            user.increaseExecutedCommandsCount();
+        });
+
+
+        actions.put("arroser tout", () -> {
+            arduino.SendMessageToArduino("e".getBytes());
+            gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.WATERING);
+            user.increaseExecutedWateringsCount();
+        });
+        actions.put("arreter arrosage", () -> {
+            arduino.SendMessageToArduino("s".getBytes());
+            gardenHCI.stopAction();
+            user.increaseExecutedCommandsCount();
+        });
+
+        actions.put("afficher statistiques", () -> gardenHCI.displayStats());
+
+        actions.put("historique humidite", () -> gardenHCI.displayChart(HumiditySensor.class));
+        actions.put("historique temperature", () -> gardenHCI.displayChart(TemperatureSensor.class));
+
+        for (int i = 1; i <= 3; i++) {
+            final int finalI = i;
+
+            actions.put("afficher " + finalI, () -> gardenHCI.displayFloorPanel(finalI));
+
+            actions.put("allumer " + finalI, () -> {
+                gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, finalI);
+                user.increaseExecutedLightingsCount();
+            });
+            actions.put("arroser " + finalI, () -> {
+                gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, finalI);
+                user.increaseExecutedWateringsCount();
+            });
+
+            actions.put("historique acidite " + finalI, () -> gardenHCI.displayChart(AciditySensor.class, finalI));
+            actions.put("historique luminosite " + finalI, () -> gardenHCI.displayChart(BrightnessSensor.class, finalI));
+            actions.put("historique eau " + finalI, () -> gardenHCI.displayChart(WaterSensor.class, finalI));
+        }
+
+    }
+
+    @Override
+    public void connectionLost(Throwable cause) {
+        System.out.println("-------------------------------------------------");
+        System.out.println("Connection lost");
+        System.out.println("Reason :");
+        System.out.println(cause.getMessage());
+        System.out.println("-------------------------------------------------");
+    }
+
+    @Override
+    public void messageArrived(String topic, MqttMessage message) {
+        System.out.println("-------------------------------------------------");
+        System.out.println("| Topic:" + topic);
+        System.out.println("| Message: " + new String(message.getPayload()));
+        System.out.println("-------------------------------------------------");
+        processCommand(new String(message.getPayload()));
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken deliveryToken) {
+        System.out.println("-------------------------------------------------");
+        System.out.println("Delivery complete");
+        System.out.println("-------------------------------------------------");
+    }
+
+    private void processCommand(String command) {
+        List<Map.Entry<String, Action>> actionsList = this.actions.entrySet().stream()
+                .filter(action -> action.getKey().equals(command))
+                .collect(Collectors.toList());
+
+        if (actionsList.size() > 0)
+            actionsList.forEach(action -> action.getValue().execute());
+        else
+            System.out.println("C'est vraiment trop difficile de comprendre votre commande -> " + command);
     }
 }

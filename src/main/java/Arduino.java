@@ -5,11 +5,11 @@ import java.util.Scanner;
 
 import static java.lang.Short.valueOf;
 
-class ArduinoHelper {
+class Arduino {
 
     private SerialPort serialPort;
 
-    ArduinoHelper() {
+    Arduino() {
         serialPort = SerialPort.getCommPort("/dev/cu.usbmodem14101");
         serialPort.setComPortParameters(9600, 8, 1, 0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 3527, 3527);
@@ -56,26 +56,22 @@ class ArduinoHelper {
 
                     if (str.contains("PHThree")) {
                         float ph = getValue(str) / 100;
-
                         garden.getFloor(3).getAciditySensor().addValue(ph);
                     }
 
                     if (str.contains("LightOne")) {
                         int light = getValue(str);
-
                         garden.getFloor(1).getBrightnessSensor().addValue((float) light);
                         gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
                     }
 
                     if (str.contains("WaterOne")) {
                         float water = getValue(str) / 100;
-
                         garden.getFloor(1).getWaterSensor().addValue(water);
                     }
 
                     if (str.contains("WaterTwo")) {
                         float water = getValue(str) / 100;
-
                         garden.getFloor(2).getWaterSensor().addValue(water);
                     }
 
@@ -87,7 +83,6 @@ class ArduinoHelper {
 
                     if (str.contains("Humidity")) {
                         float humidity = getValue(str);
-
                         garden.getHumiditySensor().addValue(humidity);
                     }
                 }

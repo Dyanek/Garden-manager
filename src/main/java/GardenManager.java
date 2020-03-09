@@ -75,24 +75,24 @@ public class GardenManager implements MqttCallback {
         actions.put("aide", () -> gardenHCI.displayHelp());
 
         actions.put("allumer tout", () -> {
-            arduino.SendMessageToArduino("j".getBytes());
+            arduino.SendMessageToArduino("h".getBytes());
             gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.LIGHTING);
             user.increaseExecutedLightingsCount();
         });
         actions.put("arreter eclairage", () -> {
-            arduino.SendMessageToArduino("t".getBytes());
+            arduino.SendMessageToArduino("i".getBytes());
             gardenHCI.stopAction();
             user.increaseExecutedCommandsCount();
         });
 
 
         actions.put("arroser tout", () -> {
-            arduino.SendMessageToArduino("e".getBytes());
+            arduino.SendMessageToArduino("j".getBytes());
             gardenHCI.displayActionOnAllFloorsPanel(GardenHCI.ActionType.WATERING);
             user.increaseExecutedWateringsCount();
         });
         actions.put("arreter arrosage", () -> {
-            arduino.SendMessageToArduino("s".getBytes());
+            arduino.SendMessageToArduino("d".getBytes());
             gardenHCI.stopAction();
             user.increaseExecutedCommandsCount();
         });
@@ -108,10 +108,25 @@ public class GardenManager implements MqttCallback {
             actions.put("afficher " + finalI, () -> gardenHCI.displayFloorPanel(finalI));
 
             actions.put("allumer " + finalI, () -> {
+                if (finalI == 1) {
+                    arduino.SendMessageToArduino("e".getBytes());
+                } else if (finalI == 2) {
+                    arduino.SendMessageToArduino("f".getBytes());
+                } else if (finalI == 3) {
+                    arduino.SendMessageToArduino("g".getBytes());
+                }
+
                 gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, finalI);
                 user.increaseExecutedLightingsCount();
             });
             actions.put("arroser " + finalI, () -> {
+                if (finalI == 1) {
+                    arduino.SendMessageToArduino("a".getBytes());
+                } else if (finalI == 2) {
+                    arduino.SendMessageToArduino("b".getBytes());
+                } else if (finalI == 3) {
+                    arduino.SendMessageToArduino("c".getBytes());
+                }
                 gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, finalI);
                 user.increaseExecutedWateringsCount();
             });

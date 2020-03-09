@@ -31,14 +31,18 @@ class Arduino {
         }
     }
 
-    private static int getValue(String str) {
+    private static float getValue(String str) {
         StringBuilder res = new StringBuilder();
         for (int j = 0; j < str.length(); j++) {
             if (str.charAt(j) >= 48 && str.charAt(j) <= 57) {
                 res.append(str.charAt(j));
             }
         }
-        return valueOf(res.toString());
+        if (!res.toString().equals("")) {
+            return Float.parseFloat(res.toString());
+        } else {
+            return (float) -1.0;
+        }
     }
 
     void getMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
@@ -52,38 +56,48 @@ class Arduino {
 
                 while (data.hasNext()) {
                     String str = data.nextLine();
-                    System.out.println(str);
+//                    System.out.println(str);
 
-                    if (str.contains("PHThree")) {
-                        float ph = getValue(str) / 100;
-                        garden.getFloor(3).getAciditySensor().addValue(ph);
-                    }
+                    if (!str.equals("")) {
+                        if (str.contains("PHThree")) {
+                            float ph = getValue(str) / 100;
+                            garden.getFloor(3).getAciditySensor().addValue(ph);
+                            gardenHCI.refreshFloorSensorLabel(AciditySensor.class, 3);
+                            System.out.println("ph = " + ph);
+                        }
 
-                    if (str.contains("LightOne")) {
-                        int light = getValue(str);
-                        garden.getFloor(1).getBrightnessSensor().addValue((float) light);
-                        gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
-                    }
+                        if (str.contains("LightOneValue")) {
+                            float light = getValue(str);
+                            garden.getFloor(1).getBrightnessSensor().addValue((float) light);
+                            gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
+                            System.out.println("lignt = " + light);
+                        }
 
-                    if (str.contains("WaterOne")) {
-                        float water = getValue(str) / 100;
-                        garden.getFloor(1).getWaterSensor().addValue(water);
-                    }
+                        if (str.contains("WaterOneValue")) {
+                            float water = getValue(str);
+                            garden.getFloor(1).getWaterSensor().addValue(water);
+                            gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 1);
+                            System.out.println("water 1 = " + water);
+                        }
 
-                    if (str.contains("WaterTwo")) {
-                        float water = getValue(str) / 100;
-                        garden.getFloor(2).getWaterSensor().addValue(water);
-                    }
+                        if (str.contains("WaterTwoValue")) {
+                            float water = getValue(str);
+                            garden.getFloor(2).getWaterSensor().addValue(water);
+                            gardenHCI.refreshFloorSensorLabel(WaterSensor.class, 2);
+                            System.out.println("water 2 = " + water);
+                        }
 
-                    if (str.contains("Temperature")) {
-                        float temperature = getValue(str);
-                        garden.getFloor(2).getAciditySensor().addValue(temperature);
-                        gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
-                    }
+                        if (str.contains("Temperature")) {
+                            float temperature = getValue(str) / 100;
+                            garden.getTemperatureSensor().addValue(temperature);
+                            gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
+                        }
 
-                    if (str.contains("Humidity")) {
-                        float humidity = getValue(str);
-                        garden.getHumiditySensor().addValue(humidity);
+                        if (str.contains("Humidity")) {
+                            float humidity = getValue(str) / 100;
+                            garden.getHumiditySensor().addValue(humidity);
+                            gardenHCI.refreshGardenSensorLabel(HumiditySensor.class);
+                        }
                     }
                 }
             }

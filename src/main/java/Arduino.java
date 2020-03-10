@@ -3,8 +3,6 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.io.IOException;
 import java.util.Scanner;
 
-import static java.lang.Short.valueOf;
-
 class Arduino {
 
     private SerialPort serialPort;
@@ -31,17 +29,14 @@ class Arduino {
         }
     }
 
-    private static int getValue(String str) {
+    private static float getValue(String str) {
         StringBuilder res = new StringBuilder();
         for (int j = 0; j < str.length(); j++) {
             if (str.charAt(j) >= 48 && str.charAt(j) <= 57) {
                 res.append(str.charAt(j));
             }
         }
-        if (res.toString().equals("")){
-          return 0;
-        }
-        return valueOf(res.toString());
+        return res.toString().equals("") ? 0.0f : Float.parseFloat(res.toString());
     }
 
     void getMessageFromArduino(Garden garden, GardenHCI gardenHCI) {
@@ -63,8 +58,8 @@ class Arduino {
                     }
 
                     if (str.contains("LightOne")) {
-                        int light = getValue(str);
-                        garden.getFloor(1).getBrightnessSensor().addValue((float) light);
+                        float light = getValue(str);
+                        garden.getFloor(1).getBrightnessSensor().addValue(light);
                         gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
                     }
 

@@ -38,6 +38,9 @@ class Arduino {
                 res.append(str.charAt(j));
             }
         }
+        if (res.toString().equals("")){
+          return 0;
+        }
         return valueOf(res.toString());
     }
 

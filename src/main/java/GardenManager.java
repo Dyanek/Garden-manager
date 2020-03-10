@@ -134,9 +134,11 @@ public class GardenManager implements MqttCallback {
         for (int i = 1; i <= 3; i++) {
             final int finalI = i;
 
-            actions.put("historique acidite" + finalI, () -> gardenHCI.displayChart(AciditySensor.class, finalI));
-            actions.put("historique luminosite" + finalI, () -> gardenHCI.displayChart(BrightnessSensor.class, finalI));
-            actions.put("historique eau" + finalI, () -> gardenHCI.displayChart(WaterSensor.class, finalI));
+            actions.put("historique acidite " + finalI, () -> gardenHCI.displayChart(AciditySensor.class, finalI));
+            actions.put("historique luminosite " + finalI, () -> gardenHCI.displayChart(BrightnessSensor.class, finalI));
+            actions.put("historique eau " + finalI, () -> gardenHCI.displayChart(WaterSensor.class, finalI));
+            actions.put("afficher "+ finalI, () -> gardenHCI.displayFloorPanel(finalI));
+
         }
     }
 

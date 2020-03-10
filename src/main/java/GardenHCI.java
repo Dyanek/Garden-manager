@@ -132,12 +132,11 @@ class GardenHCI extends JFrame {
         JLabel help2 = new JLabel("<html><body>2. \"turn on light [all/1/2/3]\"<br/>Pour allumer la/les lumières.</body></html>");
         JLabel help3 = new JLabel("<html><body>3. \"stop spray / trun off light\"<br/>Pour arrêter l'arrosage ou l'éclairage.</body></html>");
         JLabel help4 = new JLabel("<html><body>4. \"display [1/2/3]\"<br/>Pour afficher les informations d'un étage.</body></html>");
-        JLabel help5 = new JLabel("<html><body>5. \"history [temperature/humidite/luminosite/eau/acidite] ([1/2/3])\"<br/>Pour visualiser un historique.</body></html>");
+        JLabel help5 = new JLabel("<html><body>5. \"history [temperature/humidity/luminosity/water/acidity] ([1/2/3])\"<br/>Pour visualiser un historique.</body></html>");
         JLabel help6 = new JLabel("<html><body>6. \"display stats\"<br/>Pour afficher les statistiques.</body></html>");
         JLabel help7 = new JLabel("<html><body>7. \"home\"<br/>Pour retourner à la page d'accueil.</body></html>");
-        JLabel help8 = new JLabel("<html><body>Notice : Il ne faut pas dire \"stop\" cela va arrêter la commande de reconnaissance vocal.</body></html>");
 
-        displayTextPanel(Arrays.asList(title, help1, help2, help3, help4, help5, help6, help7, help8));
+        displayTextPanel(Arrays.asList(title, help1, help2, help3, help4, help5, help6, help7));
     }
 
     void displayStats() {

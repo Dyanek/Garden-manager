@@ -55,34 +55,38 @@ class Arduino {
                     if (str.contains("PHThree")) {
                         float ph = getValue(str) / 100;
                         garden.getFloor(3).getAciditySensor().addValue(ph);
+                        gardenHCI.refreshFloorSensorLabel(AciditySensor.class,3);
                     }
 
-                    if (str.contains("LightOne")) {
+                    if (str.contains("LightOneValue")) {
                         float light = getValue(str);
                         garden.getFloor(1).getBrightnessSensor().addValue(light);
                         gardenHCI.refreshFloorSensorLabel(BrightnessSensor.class, 1);
                     }
 
-                    if (str.contains("WaterOne")) {
+                    if (str.contains("WaterOneValue")) {
                         float water = getValue(str) / 100;
                         garden.getFloor(1).getWaterSensor().addValue(water);
-                    }
+                        gardenHCI.refreshFloorSensorLabel(WaterSensor.class,1);
+                      }
 
-                    if (str.contains("WaterTwo")) {
+                    if (str.contains("WaterTwoValue")) {
                         float water = getValue(str) / 100;
                         garden.getFloor(2).getWaterSensor().addValue(water);
+                        gardenHCI.refreshFloorSensorLabel(WaterSensor.class,2);
                     }
 
                     if (str.contains("Temperature")) {
-                        float temperature = getValue(str);
-                        garden.getFloor(2).getAciditySensor().addValue(temperature);
+                        float temperature = getValue(str)/100;
+                        garden.getTemperatureSensor().addValue(temperature);
                         gardenHCI.refreshGardenSensorLabel(TemperatureSensor.class);
                     }
 
                     if (str.contains("Humidity")) {
-                        float humidity = getValue(str);
+                        float humidity = getValue(str)/100;
                         garden.getHumiditySensor().addValue(humidity);
-                    }
+                        gardenHCI.refreshGardenSensorLabel(HumiditySensor.class);
+                      }
                 }
             }
         } catch (Exception e) {

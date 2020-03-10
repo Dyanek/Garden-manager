@@ -84,7 +84,21 @@ public class GardenManager implements MqttCallback {
             gardenHCI.stopAction();
             user.increaseExecutedCommandsCount();
         });
-
+        actions.put("allumer 1", () -> {
+            arduino.SendMessageToArduino("e".getBytes());
+            gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, 1);
+            user.increaseExecutedLightingsCount();
+        });
+        actions.put("allumer 2", () -> {
+            arduino.SendMessageToArduino("e".getBytes());
+            gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, 2);
+            user.increaseExecutedLightingsCount();
+        });
+        actions.put("allumer 3", () -> {
+            arduino.SendMessageToArduino("e".getBytes());
+            gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, 3);
+            user.increaseExecutedLightingsCount();
+        });
 
         actions.put("arroser tout", () -> {
             arduino.SendMessageToArduino("j".getBytes());
@@ -96,6 +110,21 @@ public class GardenManager implements MqttCallback {
             gardenHCI.stopAction();
             user.increaseExecutedCommandsCount();
         });
+        actions.put("arroser 1", () -> {
+            arduino.SendMessageToArduino("a".getBytes());
+            gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, 1);
+            user.increaseExecutedWateringsCount();
+        });
+        actions.put("arroser 2", () -> {
+            arduino.SendMessageToArduino("b".getBytes());
+            gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, 2);
+            user.increaseExecutedWateringsCount();
+        });
+        actions.put("arroser 3", () -> {
+            arduino.SendMessageToArduino("c".getBytes());
+            gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, 3);
+            user.increaseExecutedWateringsCount();
+        });
 
         actions.put("afficher statistiques", () -> gardenHCI.displayStats());
 
@@ -105,37 +134,10 @@ public class GardenManager implements MqttCallback {
         for (int i = 1; i <= 3; i++) {
             final int finalI = i;
 
-            actions.put("afficher " + finalI, () -> gardenHCI.displayFloorPanel(finalI));
-
-            actions.put("allumer " + finalI, () -> {
-                if (finalI == 1) {
-                    arduino.SendMessageToArduino("e".getBytes());
-                } else if (finalI == 2) {
-                    arduino.SendMessageToArduino("f".getBytes());
-                } else if (finalI == 3) {
-                    arduino.SendMessageToArduino("g".getBytes());
-                }
-
-                gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.LIGHTING, finalI);
-                user.increaseExecutedLightingsCount();
-            });
-            actions.put("arroser " + finalI, () -> {
-                if (finalI == 1) {
-                    arduino.SendMessageToArduino("a".getBytes());
-                } else if (finalI == 2) {
-                    arduino.SendMessageToArduino("b".getBytes());
-                } else if (finalI == 3) {
-                    arduino.SendMessageToArduino("c".getBytes());
-                }
-                gardenHCI.displayActionOnSpecificFloorPanel(GardenHCI.ActionType.WATERING, finalI);
-                user.increaseExecutedWateringsCount();
-            });
-
             actions.put("historique acidite " + finalI, () -> gardenHCI.displayChart(AciditySensor.class, finalI));
             actions.put("historique luminosite " + finalI, () -> gardenHCI.displayChart(BrightnessSensor.class, finalI));
             actions.put("historique eau " + finalI, () -> gardenHCI.displayChart(WaterSensor.class, finalI));
         }
-
     }
 
     @Override

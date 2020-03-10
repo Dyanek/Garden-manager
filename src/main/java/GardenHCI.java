@@ -128,14 +128,14 @@ class GardenHCI extends JFrame {
     void displayHelp() {
         JLabel title = new JLabel("------ Aide ------", SwingConstants.CENTER);
         title.setFont(new Font("Serif", Font.BOLD, 20));
-        JLabel help1 = new JLabel("<html><body>1.\"spray [tout/1/2/3]\"<br/>Pour arroser un étage ou tout les étages.</body></html>");
-        JLabel help2 = new JLabel("<html><body>2. \"turn on light [tout/1/2/3]\"<br/>Pour allumer la/les lumières.</body></html>");
-        JLabel help3 = new JLabel("<html><body>3. \"stop [turn on lignt/spray]\"<br/>Pour arrêter l'arrosage ou l'éclairage.</body></html>");
+        JLabel help1 = new JLabel("<html><body>1.\"spray [all/1/2/3]\"<br/>Pour arroser un étage ou tout les étages.</body></html>");
+        JLabel help2 = new JLabel("<html><body>2. \"turn on light [all/1/2/3]\"<br/>Pour allumer la/les lumières.</body></html>");
+        JLabel help3 = new JLabel("<html><body>3. \"stop [turn on light/spray]\"<br/>Pour arrêter l'arrosage ou l'éclairage.</body></html>");
         JLabel help4 = new JLabel("<html><body>4. \"display [1/2/3]\"<br/>Pour afficher les informations d'un étage.</body></html>");
         JLabel help5 = new JLabel("<html><body>5. \"history [temperature/humidite/luminosite/eau/acidite] ([1/2/3])\"<br/>Pour visualiser un historique.</body></html>");
-        JLabel help6 = new JLabel("<html><body>6. \"display stat\"<br/>Pour afficher les statistiques.</body></html>");
+        JLabel help6 = new JLabel("<html><body>6. \"display stats\"<br/>Pour afficher les statistiques.</body></html>");
         JLabel help7 = new JLabel("<html><body>7. \"home\"<br/>Pour retourner à la page d'accueil.</body></html>");
-        JLabel help8 = new JLabel("<html><body>Notice : Il ne faut pas dire \"stop\" qui va arrêter la commander de reconnaissance vocal.</body></html>");
+        JLabel help8 = new JLabel("<html><body>Notice : Il ne faut pas dire \"stop\" cela va arrêter la commande de reconnaissance vocal.</body></html>");
 
         displayTextPanel(Arrays.asList(title, help1, help2, help3, help4, help5, help6, help7, help8));
     }

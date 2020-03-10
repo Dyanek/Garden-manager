@@ -54,7 +54,7 @@ class GardenHCI extends JFrame {
 
         // -- Setting the width and height of frame --
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        jFrame.setSize(screenSize.width * 2 / 5, screenSize.height * 2 / 5); // TODO: Make screen size at 100% ratio
+        jFrame.setSize(screenSize.width, screenSize.height);
 
         mainPanel = new JPanel();
         jFrame.add(mainPanel);
